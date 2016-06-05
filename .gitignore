@@ -1,0 +1,14 @@
+# os files
+.DS_Store
+
+# ide files
+*.xcuserstate
+
+# project files
+project.xcworkspace/
+xcuserdata/
+Carthage/
+
+# specific files
+Testing/
+tasks.TODO

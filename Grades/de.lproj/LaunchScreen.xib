@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-transparent.png" translatesAutoresizingMaskIntoConstraints="NO" id="XIV-c1-WcK">
+                    <rect key="frame" x="179" y="100" width="122" height="122"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="XIV-c1-WcK" secondAttribute="height" multiplier="1:1" id="bS5-aQ-dyB"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="0.76862745098039209" green="0.2627450980392157" blue="0.32941176470588235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XIV-c1-WcK" secondAttribute="trailing" constant="20" id="32S-Wj-k7t"/>
+                <constraint firstItem="XIV-c1-WcK" firstAttribute="top" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="3Hj-Qt-LEV"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="XIV-c1-WcK" secondAttribute="bottom" constant="20" id="4py-bN-zHJ"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XIV-c1-WcK" secondAttribute="trailing" constant="20" id="6bk-yM-Cjb"/>
+                <constraint firstItem="XIV-c1-WcK" firstAttribute="top" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="top" constant="100" id="9U0-mx-1p3"/>
+                <constraint firstItem="XIV-c1-WcK" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="G9z-KO-Kxj"/>
+                <constraint firstItem="XIV-c1-WcK" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" multiplier="1/3" constant="1" id="JUN-8g-jWi"/>
+                <constraint firstItem="XIV-c1-WcK" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="Jcc-tS-d55"/>
+                <constraint firstItem="XIV-c1-WcK" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" multiplier="2/3" constant="1" id="daC-Ys-w6C"/>
+                <constraint firstItem="XIV-c1-WcK" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ddW-Za-6BD"/>
+                <constraint firstItem="XIV-c1-WcK" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="iOp-Vz-nZn"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="32S-Wj-k7t"/>
+                    <exclude reference="3Hj-Qt-LEV"/>
+                    <exclude reference="4py-bN-zHJ"/>
+                    <exclude reference="G9z-KO-Kxj"/>
+                    <exclude reference="JUN-8g-jWi"/>
+                    <exclude reference="iOp-Vz-nZn"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="548" y="455"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icon-transparent.png" width="1000" height="1000"/>
+    </resources>
+</document>
