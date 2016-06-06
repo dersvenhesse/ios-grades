@@ -11,16 +11,31 @@ import UIKit
 /*
  * Controller for disclore view (faq, imprint,...).
  */
-class DisclosureController: UIViewController {
+class DisclosureController: UIViewController, UIWebViewDelegate {
     
     // outlets
     
     @IBOutlet var webview: UIWebView!
     
+    // webview
+    
+    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        switch navigationType {
+        case .LinkClicked:
+            // open links in browser
+            UIApplication.sharedApplication().openURL(request.URL!)
+            return false
+        default:
+            return true
+        }
+    }
+    
     // view functions
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        webview.delegate = self
         
         var html = ""
         
@@ -40,7 +55,7 @@ class DisclosureController: UIViewController {
             html = html.stringByReplacingOccurrencesOfString("<%contact%>", withString: PrivateConfiguration.disclosureContact)
             html = html.stringByReplacingOccurrencesOfString("<%imprint%>", withString: PrivateConfiguration.disclosureImprint)
             html = html.stringByReplacingOccurrencesOfString("<%author%>", withString: PrivateConfiguration.disclosureAuthor)
-
+            
             // show
             webview.loadHTMLString(html, baseURL: nil)
         }
