@@ -259,7 +259,7 @@ class RequestManager {
                 
                 if (school.gradelistIndices.count == 0) {
                     for match in matches {
-                        var data = Functions.regexSearch("<th (class=\"tabelleheader\" )?align=\"[\\w]*\" width=\"[\\w%]*\" scope=\"col\"[\\s]?>((?:(?!</th>)[\\s\\S])*)</th>", text: match)
+                        var data = Functions.regexSearch("<th (class=\"tabelleheader\")?(\\s)*align=\"[\\w]*\"(\\s)*(width=\"[\\w%]*\")?(\\s)*scope=\"col\"[\\s]?>((?:(?!</th>)[\\s\\S])*)</th>", text: match)
                         
                         if (data.count == 0) {
                             continue
