@@ -12,9 +12,9 @@ import Foundation
  * Types for detail (score) status.
  */
 enum ScoresStatusType {
-    case Available
-    case NotAvailable
-    case NotEnoughParticipants
+    case available
+    case notAvailable
+    case notEnoughParticipants
 }
 
 /*
@@ -24,7 +24,7 @@ class GradeDetail {
     var participants: Int = 0
     var average: String = ""
     
-    var scoresStatus: ScoresStatusType = .NotAvailable
+    var scoresStatus: ScoresStatusType = .notAvailable
     var scores: [Score] = [Score]()
 }
 

@@ -12,11 +12,11 @@ import Foundation
  * Type names for row indices.
  */
 enum GradelistIndexKey: String {
-    case Term = "term"
-    case CP = "cp"
-    case Lecture = "lecture"
-    case Grade = "grade"
-    case State = "state"
+    case term = "term"
+    case cp = "cp"
+    case lecture = "lecture"
+    case grade = "grade"
+    case state = "state"
 }
 
 /*

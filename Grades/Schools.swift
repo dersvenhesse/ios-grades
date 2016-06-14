@@ -101,6 +101,6 @@ var schools = [
         order: "T",
         url: "qisweb.hispro.de",
         urlTrail: "/tel/rds?state=",
-        gradelistIndices: [.Lecture: 1, .Term: 2, .Grade: 3, .State: 4, .CP: 5]
+        gradelistIndices: [.lecture: 1, .term: 2, .grade: 3, .state: 4, .cp: 5]
     ),
 ]

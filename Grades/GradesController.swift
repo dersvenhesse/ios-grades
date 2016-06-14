@@ -13,12 +13,12 @@ import KeychainAccess
 var grades = [(String, [Grade])]()
 var amount = -1
 
-var lastErrorType = RequestErrorType.None
+var lastErrorType = RequestErrorType.none
 
 /*
  * Controller for grade list.
  */
-class GradesController: UIViewController, UITableViewDataSource, UITableViewDelegate, GradeDetailDelegate {
+class GradesController: UIViewController {
     
     // outlets
     
@@ -33,162 +33,6 @@ class GradesController: UIViewController, UITableViewDataSource, UITableViewDele
     let refreshControl = UIRefreshControl()
     
     var statusLabelAnimated: Bool = false
-    
-    // table functions
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return grades.count
-    }
-    
-    func tableView(tableView : UITableView, titleForHeaderInSection section: Int) -> String? {
-        
-        var key = grades[section].0
-        
-        // update strings for view
-        key = key.stringByReplacingOccurrencesOfString("SoSe", withString: "Sommersemester")
-        key = key.stringByReplacingOccurrencesOfString("WiSe", withString: "Wintersemester")
-        
-        if (key == "") {
-            key = "Verschiedene Semester"
-        }
-        
-        let cps = calculateCreditpoints(section)
-        if (cps > 0) {
-            key += " – \(formatCreditpoints(cps)) CP"
-        }
-        
-        let averageGrade = calculateAverageGrade(section)
-        if (!averageGrade.isNaN && !averageGrade.isInfinite && averageGrade != 0) {
-            key += " – ⌀ \(self.formatGrade(averageGrade, precision: 2))"
-        }
-        
-        return key
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return grades[section].1.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        let entry = grades[indexPath.section].1[indexPath.row]
-
-        // update strings for view
-        let lecture = entry.lecture
-        let cp = entry.cp
-        let state = entry.state
-        let grade = entry.grade
-                
-        var gradeString = grade == 0 ? state : formatGrade(grade)
-        if (gradeString == "bestanden" || gradeString == "BE") {
-            gradeString = "✓"
-        }
-        else if (gradeString == "nicht bestanden" || gradeString == "NB") {
-            gradeString = "✗"
-        }
-        
-        // create cell
-        let identifier = "gradeCell"
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! GradeTableViewCell
-        
-        if (settings[Setting.IncludeDetails.rawValue]!) {
-            if (entry.details != nil) {
-                cell.accessoryView = nil
-                cell.accessoryType = .DisclosureIndicator
-            }
-            else {
-                cell.accessoryView = UIView()
-                cell.accessoryView!.frame = CGRectMake(0.0, 0.0, 18.0, 0.0)
-            }
-        }
-        else {
-            cell.accessoryView = UIView()
-            cell.accessoryView!.frame = CGRectMake(0.0, 0.0, 0.0, 0.0)
-        }
-        
-        cell.lectureLabel.text = "\(lecture)"
-        cell.cpLabel.text = cp > 0 ? "\(formatCreditpoints(cp)) CP" : "\(state)"
-        cell.gradeLabel.text = "\(gradeString)"
-        
-        return cell
-    }
-    
-    // detail delegate
-    
-    func attachDetail(error: DetailRequestError, grade: Grade, detail: GradeDetail?) {
-        if (error.type == .None && detail != nil) {
-            outer: for (termIndex, _) in grades.enumerate() {
-                for entry in grades[termIndex].1 {
-                    if (entry.equals(grade)) {
-                        entry.details = detail!
-                        break outer
-                    }
-                }
-            }
-            table.reloadData()
-        }
-        else {
-            self.updateStatusLabelText("Fehlercode: \(error.code)", animated: true)
-        }
-    }
-    
-    // segues and refresh control
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "showSetup") {
-            let vc = segue.destinationViewController as! SettingsController
-            vc.initialSetup = true
-        }
-        else if (segue.identifier == "showDetail") {
-            let vc = segue.destinationViewController as! GradesDetailController
-            
-            let indexPath = table.indexPathForSelectedRow
-            vc.grade = grades[indexPath!.section].1[indexPath!.row]
-        }
-    }
-    
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if (identifier == "showDetail") {
-            let indexPath = table.indexPathForSelectedRow
-            
-            if (grades[indexPath!.section].1[indexPath!.row].details != nil) {
-                return true
-            }
-            else {
-                table.deselectRowAtIndexPath(table.indexPathForSelectedRow!, animated: false)
-                return false
-            }
-        }
-        return true
-    }
-    
-    func refresh(refreshControl: UIRefreshControl) {
-        updateView()
-    }
-    
-    private func beginRefresh() {
-        
-        let rm = RequestManager.sharedInstance
-        if (rm.timestamp != nil) {
-            refreshControl.attributedTitle = NSAttributedString(string: "Zuletzt aktualisiert am \(Functions.formatTimestamp(rm.timestamp!))")
-        }
-        
-        refreshControl.beginRefreshing()
-        refreshControl.enabled = false
-        
-        table.scrollRectToVisible(CGRectMake(0, 0, 1, 1), animated: true)
-        statusLabel.text = "Aktualisiert gerade"
-        
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-    }
-    
-    private func endRefresh() {
-        refreshControl.endRefreshing()
-        refreshControl.enabled = true
-        
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-    }
     
     // view functions
     
@@ -217,10 +61,6 @@ class GradesController: UIViewController, UITableViewDataSource, UITableViewDele
         if ((table.indexPathForSelectedRow) != nil) {
             table.deselectRowAtIndexPath(table.indexPathForSelectedRow!, animated: false)
         }
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
     
     func applicationWillEnterForeground() {
@@ -253,7 +93,7 @@ class GradesController: UIViewController, UITableViewDataSource, UITableViewDele
             let rm = RequestManager.sharedInstance
             rm.delegate = self
             
-            if (rm.getRefreshing() == false && ((rm.timestamp == nil || NSDate().timeIntervalSinceDate(rm.timestamp!) > 60) || lastErrorType != .None)) {
+            if (rm.getRefreshing() == false && ((rm.timestamp == nil || NSDate().timeIntervalSinceDate(rm.timestamp!) > 60) || lastErrorType != .none)) {
                 
                 beginRefresh()
                 
@@ -263,7 +103,7 @@ class GradesController: UIViewController, UITableViewDataSource, UITableViewDele
                     
                     lastErrorType = error.type
                     
-                    if (error.type == .None) {
+                    if (error.type == .none) {
                         grades = gradelist
                         amount = count
                         
@@ -279,22 +119,22 @@ class GradesController: UIViewController, UITableViewDataSource, UITableViewDele
                             var message = ""
                             
                             switch error.type {
-                            case .SettingsError:
+                            case .settingsError:
                                 title = "Fehlende Angaben"
                                 message = "Bitte Einstellungen prüfen."
-                            case .QisError:
+                            case .qisError:
                                 title = "QIS nicht erreichbar"
                                 message = "Bitte Internetverbindung und/oder QIS prüfen."
-                            case .LoginError:
+                            case .loginError:
                                 title = "Login nicht möglich"
                                 message = "Bitte Zugangsdaten prüfen."
-                            case .AsiError:
+                            case .asiError:
                                 title = "Prüfungsverwaltung nicht aufrufbar"
                                 message = "Bitte nochmals aktualisieren."
-                            case .DegreeError:
+                            case .degreeError:
                                 title = "Abschluss nicht gefunden"
                                 message = "Bitte das Vorhandensein einer Abschluss-Auswahl prüfen."
-                            case .ListError:
+                            case .listError:
                                 title = "Leere Notenliste"
                                 message = "Bitte das Vorhandensein von Noten prüfen."
                             default:
@@ -365,6 +205,180 @@ class GradesController: UIViewController, UITableViewDataSource, UITableViewDele
             amount = defaults.integerForKey("amount")
         }
     }
+}
+
+// MARK - detail
+
+extension GradesController: GradeDetailDelegate {
+    func attachDetail(error: DetailRequestError, grade: Grade, detail: GradeDetail?) {
+        if (error.type == .none && detail != nil) {
+            outer: for (termIndex, _) in grades.enumerate() {
+                for entry in grades[termIndex].1 {
+                    if (entry.equals(grade)) {
+                        entry.details = detail!
+                        break outer
+                    }
+                }
+            }
+            table.reloadData()
+        }
+        else {
+            self.updateStatusLabelText("Fehlercode: \(error.code)", animated: true)
+        }
+    }
+}
+
+// MARK - table
+
+extension GradesController: UITableViewDataSource, UITableViewDelegate {
+
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return grades.count
+    }
+    
+    func tableView(tableView : UITableView, titleForHeaderInSection section: Int) -> String? {
+        
+        var key = grades[section].0
+        
+        // update strings for view
+        key = key.stringByReplacingOccurrencesOfString("SoSe", withString: "Sommersemester")
+        key = key.stringByReplacingOccurrencesOfString("WiSe", withString: "Wintersemester")
+        
+        if (key == "") {
+            key = "Verschiedene Semester"
+        }
+        
+        let cps = calculateCreditpoints(section)
+        if (cps > 0) {
+            key += " – \(formatCreditpoints(cps)) CP"
+        }
+        
+        let averageGrade = calculateAverageGrade(section)
+        if (!averageGrade.isNaN && !averageGrade.isInfinite && averageGrade != 0) {
+            key += " – ⌀ \(self.formatGrade(averageGrade, precision: 2))"
+        }
+        
+        return key
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return grades[section].1.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let entry = grades[indexPath.section].1[indexPath.row]
+        
+        // update strings for view
+        let lecture = entry.lecture
+        let cp = entry.cp
+        let state = entry.state
+        let grade = entry.grade
+        
+        var gradeString = grade == 0 ? state : formatGrade(grade)
+        if (gradeString == "bestanden" || gradeString == "BE") {
+            gradeString = "✓"
+        }
+        else if (gradeString == "nicht bestanden" || gradeString == "NB") {
+            gradeString = "✗"
+        }
+        
+        // create cell
+        let identifier = "gradeCell"
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! GradeTableViewCell
+        
+        if (settings[Setting.includeDetails.rawValue]!) {
+            if (entry.details != nil) {
+                cell.accessoryView = nil
+                cell.accessoryType = .DisclosureIndicator
+            }
+            else {
+                cell.accessoryView = UIView()
+                cell.accessoryView!.frame = CGRectMake(0.0, 0.0, 18.0, 0.0)
+            }
+        }
+        else {
+            cell.accessoryView = UIView()
+            cell.accessoryView!.frame = CGRectMake(0.0, 0.0, 0.0, 0.0)
+        }
+        
+        cell.lectureLabel.text = "\(lecture)"
+        cell.cpLabel.text = cp > 0 ? "\(formatCreditpoints(cp)) CP" : "\(state)"
+        cell.gradeLabel.text = "\(gradeString)"
+        
+        return cell
+    }
+}
+
+// MARK - refresh control
+
+extension GradesController {
+    
+    func refresh(refreshControl: UIRefreshControl) {
+        updateView()
+    }
+    
+    private func beginRefresh() {
+        
+        let rm = RequestManager.sharedInstance
+        if (rm.timestamp != nil) {
+            refreshControl.attributedTitle = NSAttributedString(string: "Zuletzt aktualisiert am \(Functions.formatTimestamp(rm.timestamp!))")
+        }
+        
+        refreshControl.beginRefreshing()
+        refreshControl.enabled = false
+        
+        table.scrollRectToVisible(CGRectMake(0, 0, 1, 1), animated: true)
+        statusLabel.text = "Aktualisiert gerade"
+        
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+    }
+    
+    private func endRefresh() {
+        refreshControl.endRefreshing()
+        refreshControl.enabled = true
+        
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+    }
+}
+
+// MARK - segues
+
+extension GradesController {
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "showSetup") {
+            let vc = segue.destinationViewController as! SettingsController
+            vc.initialSetup = true
+        }
+        else if (segue.identifier == "showDetail") {
+            let vc = segue.destinationViewController as! GradesDetailController
+            
+            let indexPath = table.indexPathForSelectedRow
+            vc.grade = grades[indexPath!.section].1[indexPath!.row]
+        }
+    }
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        if (identifier == "showDetail") {
+            let indexPath = table.indexPathForSelectedRow
+            
+            if (grades[indexPath!.section].1[indexPath!.row].details != nil) {
+                return true
+            }
+            else {
+                table.deselectRowAtIndexPath(table.indexPathForSelectedRow!, animated: false)
+                return false
+            }
+        }
+        return true
+    }
+}
+
+// MARK - calculates and formats
+
+extension GradesController {
     
     private func updateStatusLabelText(text: String = "", animated: Bool = false) {
         var labelText = ""
@@ -383,17 +397,17 @@ class GradesController: UIViewController, UITableViewDataSource, UITableViewDele
                 labelText += " – ⌀ \(self.formatGrade(totalAverageGrade, precision: 2))"
             }
         }
-    
+        
         if (animated && text != "") {
             if (!statusLabelAnimated) {
                 UIView.animateWithDuration(4.0, animations: {
                     self.statusLabel.text = text
                     self.statusLabel.alpha = 0.0
                     self.statusLabelAnimated = true
-                }, completion: { (finished: Bool) in
-                    self.statusLabel.text = labelText
-                    self.statusLabel.alpha = 1.0
-                    self.statusLabelAnimated = false
+                    }, completion: { (finished: Bool) in
+                        self.statusLabel.text = labelText
+                        self.statusLabel.alpha = 1.0
+                        self.statusLabelAnimated = false
                 })
             }
         }
@@ -404,8 +418,6 @@ class GradesController: UIViewController, UITableViewDataSource, UITableViewDele
             self.statusLabel.text = labelText
         }
     }
-    
-    // calculates and formats
     
     private func calculateTotalCreditpoints() -> Double {
         var totalCps: Double = 0.0
@@ -491,6 +503,5 @@ class GradesController: UIViewController, UITableViewDataSource, UITableViewDele
         
         return s
     }
-
 }
 

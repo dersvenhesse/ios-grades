@@ -17,7 +17,7 @@ var school = School()
 /*
  * Controller for settings and setup page.
  */
-class SettingsController: UITableViewController, UITextFieldDelegate {
+class SettingsController: UITableViewController {
 
     // outlets
     
@@ -49,7 +49,7 @@ class SettingsController: UITableViewController, UITextFieldDelegate {
     }
     
     @IBAction func detailSwitchChanged(sender: AnyObject) {
-        settings[Setting.IncludeDetails.rawValue]  = sender.on
+        settings[Setting.includeDetails.rawValue]  = sender.on
         NSUserDefaults.standardUserDefaults().setObject(settings, forKey: "settings")
         
         RequestManager.sharedInstance.timestamp = nil
@@ -58,39 +58,6 @@ class SettingsController: UITableViewController, UITextFieldDelegate {
     // variables
     
     var initialSetup = false
-
-    // table functions
-
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String {
-        
-        var title = ""
-        switch(section) {
-        case 0:
-            title = "Universtität oder Hochschule"
-            break
-        case 1:
-            title = "QIS-Zugangsdaten"
-            break
-        case 2:
-            title = settings[Setting.ShowDetailSwitch.rawValue]! ? "Weiteres" : ""
-            break
-        default:
-            break
-        }
-        
-        return title
-    }
-    
-    // textfield
-
-    func dismissKeyboard() {
-        view.endEditing(true)
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
     
     // view functions
     
@@ -135,16 +102,12 @@ class SettingsController: UITableViewController, UITextFieldDelegate {
         usernameInput.text = "\(username)"
         passwordInput.text = "\(password)"
         
-        detailSwitchCell.hidden = !settings[Setting.ShowDetailSwitch.rawValue]!
-        detailSwitch.on = settings[Setting.IncludeDetails.rawValue]!
+        detailSwitchCell.hidden = !settings[Setting.showDetailSwitch.rawValue]!
+        detailSwitch.on = settings[Setting.includeDetails.rawValue]!
         
         if ((table.indexPathForSelectedRow) != nil) {
             table.deselectRowAtIndexPath(table.indexPathForSelectedRow!, animated: false)
         }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
     
     // helper
@@ -170,5 +133,43 @@ class SettingsController: UITableViewController, UITextFieldDelegate {
             input.text = "\(global)"
         }
     }
+}
+
+// MARK - table
+
+extension SettingsController {
     
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String {
+        
+        var title = ""
+        switch(section) {
+        case 0:
+            title = "Universtität oder Hochschule"
+            break
+        case 1:
+            title = "QIS-Zugangsdaten"
+            break
+        case 2:
+            title = settings[Setting.showDetailSwitch.rawValue]! ? "Weiteres" : ""
+            break
+        default:
+            break
+        }
+        
+        return title
+    }
+}
+
+// MARK - textfield
+
+extension SettingsController: UITextFieldDelegate {
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }

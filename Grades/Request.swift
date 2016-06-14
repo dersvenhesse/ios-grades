@@ -12,10 +12,10 @@ import Foundation
  * Error types which may occur during a request.
  */
 enum RequestErrorType {
-    case None
-    case SettingsError
-    case QisError, LoginError, AsiError, DegreeError, ListError
-    case ScoreError
+    case none
+    case settingsError
+    case qisError, loginError, asiError, degreeError, listError
+    case scoreError
 }
 
 /*
@@ -35,8 +35,8 @@ class RequestError {
  * Error types whih may occur during a detail request.
  */
 enum DetailRequestErrorType {
-    case None
-    case Error
+    case none
+    case error
 }
 
 /*
@@ -56,6 +56,6 @@ class DetailRequestError {
  * Types of request attempts.
  */
 enum RequestAttemptType {
-    case DegreeAttempt
-    case ScoreListAttempt
+    case degreeAttempt
+    case scoreListAttempt
 }

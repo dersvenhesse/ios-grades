@@ -11,24 +11,11 @@ import UIKit
 /*
  * Controller for disclore view (faq, imprint,...).
  */
-class DisclosureController: UIViewController, UIWebViewDelegate {
+class DisclosureController: UIViewController {
     
     // outlets
     
     @IBOutlet var webview: UIWebView!
-    
-    // webview
-    
-    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-        switch navigationType {
-        case .LinkClicked:
-            // open links in browser
-            UIApplication.sharedApplication().openURL(request.URL!)
-            return false
-        default:
-            return true
-        }
-    }
     
     // view functions
     
@@ -61,8 +48,20 @@ class DisclosureController: UIViewController, UIWebViewDelegate {
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
+}
+
+// MARK - webview
+
+extension DisclosureController: UIWebViewDelegate {
     
+    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        switch navigationType {
+        case .LinkClicked:
+            // open links in browser
+            UIApplication.sharedApplication().openURL(request.URL!)
+            return false
+        default:
+            return true
+        }
+    }
 }

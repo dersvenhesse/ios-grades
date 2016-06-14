@@ -17,9 +17,29 @@ class GradesDetailController: UITableViewController {
     // variables
     
     var grade = Grade()
-        
-    // table functions
+    
+    // view functions
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateView()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        updateView()
+    }
+    
+    // helper
+    
+    private func updateView() {
+        self.title = grade.lecture
+    }
+}
+
+// MARK - table
+
+extension GradesDetailController {
+    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return grade.details!.scores.count == 0 ? 1 : 2
     }
@@ -53,7 +73,7 @@ class GradesDetailController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! DetailTableViewCell
         
         if (indexPath.section == 0) {
-            if (entry.scores.count == 0 && entry.scoresStatus == .NotEnoughParticipants) {
+            if (entry.scores.count == 0 && entry.scoresStatus == .notEnoughParticipants) {
                 cell.textLabel!.text = "Zu wenige Leistungen für Notenspiegel vorliegend."
             }
             else if (entry.scores.count == 0) {
@@ -82,27 +102,4 @@ class GradesDetailController: UITableViewController {
         
         return cell
     }
-    
-    // view functions
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        updateView()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        updateView()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    // helper
-    
-    private func updateView() {
-        self.title = grade.lecture
-    }
-    
-    
 }

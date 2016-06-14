@@ -19,16 +19,16 @@ let testing = false
 
 // enum to match raw values to strings
 enum Setting: String {
-    case IncludeDetails = "includeDetails"
-    case ShowDetailSwitch = "showDetailSwitch"
+    case includeDetails = "includeDetails"
+    case showDetailSwitch = "showDetailSwitch"
 }
 
 // settings array using raw values
 var settings: [String: Bool] = [
     
     // if set, details will be loaded as well
-    Setting.IncludeDetails.rawValue: false,
+    Setting.includeDetails.rawValue: false,
     
     // if set, a switch will be shown on the settings page
-    Setting.ShowDetailSwitch.rawValue: false,
+    Setting.showDetailSwitch.rawValue: false,
 ]

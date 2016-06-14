@@ -54,20 +54,20 @@ class RequestManager {
         attempts = [RequestAttemptType: [String: Int]]()
         
         self.navigate() { (error) in
-            if (error.type != .None) {
+            if (error.type != .none) {
                 self.refreshing = false
                 return callback(error, [], 0)
             }
             else {
                 self.findList() { (error, gradelist) in
-                    if (error.type != .None) {
+                    if (error.type != .none) {
                         self.refreshing = false
                         return callback(error, [], 0)
                     }
                     
                     self.refreshing = false
                     
-                    return callback(RequestError(type: .None), self.orderGradelistByTerm(gradelist), gradelist.count)
+                    return callback(RequestError(type: .none), self.orderGradelistByTerm(gradelist), gradelist.count)
                 }
             }
         }
@@ -81,34 +81,34 @@ class RequestManager {
         self.refreshing = true
         
         if (username == "" || password == "" || school.url == "") {
-            return callback(error: RequestError(type: .SettingsError))
+            return callback(error: RequestError(type: .settingsError))
         }
         
         // call login page and set cookie (jsessionid)
         self.gotoQis() { (error) in
-            if (error.type != .None) {
+            if (error.type != .none) {
                 return callback(error: error)
             }
             
             // login
             self.login(username, password: password) { (error) in
-                if (error.type != .None && !testing) {
+                if (error.type != .none && !testing) {
                     return callback(error: error)
                 }
                 
                 // navigate to menu and find asi
                 self.findAsi() { (error) in
-                    if (error.type != .None) {
+                    if (error.type != .none) {
                         return callback(error: error)
                     }
                     
                     // navigate to find degree
                     self.findDegree() { (error) in
-                        if (error.type != .None && !testing) {
+                        if (error.type != .none && !testing) {
                             return callback(error: error)
                         }
                         
-                        return callback(error: RequestError(type: .None))
+                        return callback(error: RequestError(type: .none))
                     }
                 }
             }
@@ -122,13 +122,13 @@ class RequestManager {
         self.alamofireManager.request(.GET, "https://" + school.url + school.urlTrail + "user&type=0").responseString { response in
             
             if (!response.result.isSuccess) {
-                return callback(error: RequestError(type: .QisError))
+                return callback(error: RequestError(type: .qisError))
             }
             else if (response.response?.statusCode >= 500) {
-                return callback(error: RequestError(type: .QisError))
+                return callback(error: RequestError(type: .qisError))
             }
             else {
-                return callback(error: RequestError(type: .None))
+                return callback(error: RequestError(type: .none))
             }
         }
     }
@@ -142,19 +142,19 @@ class RequestManager {
             let value = response.result.value
             
             if (!response.result.isSuccess) {
-                return callback(error: RequestError(type: .LoginError, code: 314))
+                return callback(error: RequestError(type: .loginError, code: 314))
             }
             else if (value == nil) {
-                return callback(error: RequestError(type: .LoginError, code: 361))
+                return callback(error: RequestError(type: .loginError, code: 361))
             }
             else if (value == "") {
-                return callback(error: RequestError(type: .LoginError, code: 382))
+                return callback(error: RequestError(type: .loginError, code: 382))
             }
             else if (value!.rangeOfString("Anmeldung fehlgeschlagen") != nil) {
-                return callback(error: RequestError(type: .LoginError, code: 349))
+                return callback(error: RequestError(type: .loginError, code: 349))
             }
             else {
-                return callback(error: RequestError(type: .None))
+                return callback(error: RequestError(type: .none))
             }
         }
     }
@@ -172,7 +172,7 @@ class RequestManager {
             }
             
             if (!response.result.isSuccess || value == nil || value == "") {
-                return callback(error: RequestError(type: .AsiError, code: 481))
+                return callback(error: RequestError(type: .asiError, code: 481))
             }
             else {
                 var matches = Functions.regexSearch(";asi=.*?[\"|&]", text: value!)
@@ -180,10 +180,10 @@ class RequestManager {
                 // save first match as asi
                 if (matches.count > 0 && matches[0].characters.count == 26) {
                     self.asi = (matches[0] as NSString).substringWithRange(NSMakeRange(5, 20))
-                    return callback(error: RequestError(type: .None))
+                    return callback(error: RequestError(type: .none))
                 }
                 else {
-                    return callback(error: RequestError(type: .AsiError, code: (500 + matches.count)))
+                    return callback(error: RequestError(type: .asiError, code: (500 + matches.count)))
                 }
             }
         }
@@ -198,10 +198,10 @@ class RequestManager {
             let value = response.result.value
                         
             if (!response.result.isSuccess || value == nil || value == "") {
-                return callback(error: RequestError(type: .DegreeError, code: 129))
+                return callback(error: RequestError(type: .degreeError, code: 129))
             }
             else if (value!.rangeOfString("viele Klicks Warteseite") != nil) {
-                return callback(error: RequestError(type: .DegreeError, code: 141))
+                return callback(error: RequestError(type: .degreeError, code: 141))
             }
             else {
                 var matches = Functions.regexSearch("Aabschl\\%3D[\\w]*", text: value!)
@@ -212,18 +212,18 @@ class RequestManager {
                     
                     // save
                     self.degree = (matches[0] as NSString).substringFromIndex(index)
-                    return callback(error: RequestError(type: .None))
+                    return callback(error: RequestError(type: .none))
                 }
                 else {
                     // retries when match is found even though it should be found
-                    self.increaseAttempts(.DegreeAttempt, identifier: "")
-                    if (self.attempts[.DegreeAttempt]![""] < 3) {
+                    self.increaseAttempts(.degreeAttempt, identifier: "")
+                    if (self.attempts[.degreeAttempt]![""] < 3) {
                         Functions.delay(2.0) {
                             self.findDegree(callback)
                         }
                     }
                     else {
-                        return callback(error: RequestError(type: .DegreeError, code: 183))
+                        return callback(error: RequestError(type: .degreeError, code: 183))
                     }
                 }
             }
@@ -244,7 +244,7 @@ class RequestManager {
             }
             
             if (!response.result.isSuccess || value == nil || value == "") {
-                return callback(error: RequestError(type: .ListError, code: 612), list: [])
+                return callback(error: RequestError(type: .listError, code: 612), list: [])
             }
             else {
                 var gradelist: [Grade] = [Grade]()
@@ -252,7 +252,7 @@ class RequestManager {
                 let matches = Functions.regexSearch("<tr>((?:(?!</tr>)[\\s\\S])*)</tr>", text: value!)
                 
                 if (matches.count == 0) {
-                    return callback(error: RequestError(type: .ListError, code: 631), list: [])
+                    return callback(error: RequestError(type: .listError, code: 631), list: [])
                 }
                 
                 // find table header for specific row and stores their indices
@@ -274,7 +274,7 @@ class RequestManager {
                 }
                 
                 if (school.gradelistIndices.count == 0) {
-                    return callback(error: RequestError(type: .ListError, code: 676), list: [])
+                    return callback(error: RequestError(type: .listError, code: 676), list: [])
                 }
                 
                 // show switch on settings page when details should be available
@@ -302,22 +302,22 @@ class RequestManager {
                             Functions.stripHtml($0)
                         }
                         
-                        if !(school.gradelistIndices[.Lecture] == nil || school.gradelistIndices[.State] == nil || self.excludetexts.contains(data[school.gradelistIndices[.Lecture]!]) || data[school.gradelistIndices[.State]!] == "angemeldet" || data[school.gradelistIndices[.State]!] == "AN" || data[school.gradelistIndices[.State]!] == "Prüfung vorhanden") {
+                        if !(school.gradelistIndices[.lecture] == nil || school.gradelistIndices[.state] == nil || self.excludetexts.contains(data[school.gradelistIndices[.lecture]!]) || data[school.gradelistIndices[.state]!] == "angemeldet" || data[school.gradelistIndices[.state]!] == "AN" || data[school.gradelistIndices[.state]!] == "Prüfung vorhanden") {
                             
                             // create object
                             let grade = Grade(
-                                lecture: school.gradelistIndices[.Lecture] != nil ? data[school.gradelistIndices[.Lecture]!] : "",
-                                term: school.gradelistIndices[.Term] != nil ? data[school.gradelistIndices[.Term]!] : "",
-                                grade: school.gradelistIndices[.Grade] != nil ? ((data[school.gradelistIndices[.Grade]!]).stringByReplacingOccurrencesOfString(",", withString: ".") as NSString).doubleValue : 0.0,
-                                cp: school.gradelistIndices[.CP] != nil ? ((data[school.gradelistIndices[.CP]!]).stringByReplacingOccurrencesOfString(",", withString: ".") as NSString).doubleValue : 0.0,
-                                state: school.gradelistIndices[.State] != nil ? data[school.gradelistIndices[.State]!] : ""
+                                lecture: school.gradelistIndices[.lecture] != nil ? data[school.gradelistIndices[.lecture]!] : "",
+                                term: school.gradelistIndices[.term] != nil ? data[school.gradelistIndices[.term]!] : "",
+                                grade: school.gradelistIndices[.grade] != nil ? ((data[school.gradelistIndices[.grade]!]).stringByReplacingOccurrencesOfString(",", withString: ".") as NSString).doubleValue : 0.0,
+                                cp: school.gradelistIndices[.cp] != nil ? ((data[school.gradelistIndices[.cp]!]).stringByReplacingOccurrencesOfString(",", withString: ".") as NSString).doubleValue : 0.0,
+                                state: school.gradelistIndices[.state] != nil ? data[school.gradelistIndices[.state]!] : ""
                             )
                                                                                     
                             let hrefs = Functions.regexSearch("href=\"[^\"]*?asi.*?\"", text: match)
 
                             // find details link to fetch scores
                             if (hrefs.count > 0 && self.delegate != nil) {
-                                if (settings[Setting.IncludeDetails.rawValue] != false) {
+                                if (settings[Setting.includeDetails.rawValue] != false) {
                                     var scoreLink = hrefs[0].substringWithRange(hrefs[0].startIndex.advancedBy(6) ..< hrefs[0].endIndex.advancedBy(-1))
                                     scoreLink = scoreLink.stringByReplacingOccurrencesOfString("&amp;", withString: "&")
                                     
@@ -343,20 +343,20 @@ class RequestManager {
                 
                 // check for special error possibilities
                 if (countExcluded == matches.count) {
-                    return callback(error: RequestError(type: .ListError, code: (700 + countClassmatch)), list: [])
+                    return callback(error: RequestError(type: .listError, code: (700 + countClassmatch)), list: [])
                 }
                 if (countContinue == matches.count) {
-                    return callback(error: RequestError(type: .ListError, code: (800 + countContinue)), list: [])
+                    return callback(error: RequestError(type: .listError, code: (800 + countContinue)), list: [])
                 }
                 if (countExcluded == matches.count) {
-                    return callback(error: RequestError(type: .ListError, code: (900 + countExcluded)), list: [])
+                    return callback(error: RequestError(type: .listError, code: (900 + countExcluded)), list: [])
                 }
                 
                 if (gradelist.count == 0) {
-                    return callback(error: RequestError(type: .ListError, code: 619), list: [])
+                    return callback(error: RequestError(type: .listError, code: 619), list: [])
                 }
                 else {
-                    return callback(error: RequestError(type: .None), list: gradelist)
+                    return callback(error: RequestError(type: .none), list: gradelist)
                 }
             }
         }
@@ -369,30 +369,30 @@ class RequestManager {
         self.alamofireManager.request(.GET, scoreLink).responseString { response in
             
             if(response.result.error != nil || response.result.isFailure) {
-                self.delegate?.attachDetail(DetailRequestError(type: .Error, code: 1134), grade: grade, detail: nil)
+                self.delegate?.attachDetail(DetailRequestError(type: .error, code: 1134), grade: grade, detail: nil)
                 return
             }
             
             let value = response.result.value
                         
             if (!response.result.isSuccess || value == nil || value == "") {
-                self.delegate?.attachDetail(DetailRequestError(type: .Error, code: 1198), grade: grade, detail: nil)
+                self.delegate?.attachDetail(DetailRequestError(type: .error, code: 1198), grade: grade, detail: nil)
                 return
             }
             else if (value!.rangeOfString("de.his.exceptions.AsiException") != nil) {
-                self.delegate?.attachDetail(DetailRequestError(type: .Error, code: 1132), grade: grade, detail: nil)
+                self.delegate?.attachDetail(DetailRequestError(type: .error, code: 1132), grade: grade, detail: nil)
                 return
             }
             else if (value!.rangeOfString("viele Klicks Warteseite") != nil) {
                 // some retries when qis denies quick navigation
-                self.increaseAttempts(.ScoreListAttempt, identifier: grade.lecture)
-                if (self.attempts[.ScoreListAttempt]![grade.lecture] < 3) {
+                self.increaseAttempts(.scoreListAttempt, identifier: grade.lecture)
+                if (self.attempts[.scoreListAttempt]![grade.lecture] < 3) {
                     Functions.delay(2.0) {
                         self.loadScorelist(scoreLink, grade: grade)
                     }
                 }
                 else {
-                    self.delegate?.attachDetail(DetailRequestError(type: .Error, code: 1161), grade: grade, detail: nil)
+                    self.delegate?.attachDetail(DetailRequestError(type: .error, code: 1161), grade: grade, detail: nil)
                 }
                 return
             }
@@ -401,7 +401,7 @@ class RequestManager {
                 let detail = GradeDetail()
                 
                 if (value!.rangeOfString("zu wenige Leistungen vorliegen") != nil) {
-                    detail.scoresStatus = .NotEnoughParticipants
+                    detail.scoresStatus = .notEnoughParticipants
                 }
                 
                 // find score list
@@ -434,13 +434,13 @@ class RequestManager {
                             detail.scores.append(score)
                         }
                     }
-                    detail.scoresStatus = .Available
+                    detail.scoresStatus = .available
                     
                     detail.average = matches[matches.count - 1]
                     detail.participants = Int(matches[matches.count - 2]) ?? 0
 
                     // attach to already listed grade via delegate
-                    self.delegate?.attachDetail(DetailRequestError(type: .None), grade: grade, detail: detail)
+                    self.delegate?.attachDetail(DetailRequestError(type: .none), grade: grade, detail: detail)
                     return
 
                 }
@@ -449,7 +449,7 @@ class RequestManager {
                 }
                 else {
                     // attach as error to already listet grade
-                    self.delegate?.attachDetail(DetailRequestError(type: .Error, code: (1200 + matches.count)), grade: grade, detail: nil)
+                    self.delegate?.attachDetail(DetailRequestError(type: .error, code: (1200 + matches.count)), grade: grade, detail: nil)
                     return
                 }
             }
@@ -529,21 +529,21 @@ class RequestManager {
      * Save row indices for specific table headers.
      */
     private func createGradelistIndicesFromData(data: [String]) {
-        school.gradelistIndices[.Lecture] = data.indexOf("Prüfungstext")!
-        school.gradelistIndices[.Term] = data.indexOf("Semester")!
-        school.gradelistIndices[.Grade] = data.indexOf("Note")!
-        school.gradelistIndices[.State] = data.indexOf("Status")!
+        school.gradelistIndices[.lecture] = data.indexOf("Prüfungstext")!
+        school.gradelistIndices[.term] = data.indexOf("Semester")!
+        school.gradelistIndices[.grade] = data.indexOf("Note")!
+        school.gradelistIndices[.state] = data.indexOf("Status")!
         if (data.contains("Credit Points")) {
-            school.gradelistIndices[.CP] = data.indexOf("Credit Points")!
+            school.gradelistIndices[.cp] = data.indexOf("Credit Points")!
         }
         else if (data.contains("CP")) {
-            school.gradelistIndices[.CP] = data.indexOf("CP")!
+            school.gradelistIndices[.cp] = data.indexOf("CP")!
         }
         else if (data.contains("ECTS")) {
-            school.gradelistIndices[.CP] = data.indexOf("ECTS")!
+            school.gradelistIndices[.cp] = data.indexOf("ECTS")!
         }
         else if (data.contains("Bonus")) {
-            school.gradelistIndices[.CP] = data.indexOf("Bonus")!
+            school.gradelistIndices[.cp] = data.indexOf("Bonus")!
         }
     }
     
@@ -565,10 +565,10 @@ class RequestManager {
         let tables = Functions.regexSearch("<table[\\s\\S]*?>((?:(?!</table>)[\\s\\S])*)</table>", text: html)
         let links = Functions.regexSearch("href=\"[^\"]*?asi.*?\"", text: tables[1])
         
-        settings[Setting.ShowDetailSwitch.rawValue] = links.count > 0 ? true : false
+        settings[Setting.showDetailSwitch.rawValue] = links.count > 0 ? true : false
         
-        if (settings[Setting.ShowDetailSwitch.rawValue] == false) {
-            settings[Setting.IncludeDetails.rawValue] = false
+        if (settings[Setting.showDetailSwitch.rawValue] == false) {
+            settings[Setting.includeDetails.rawValue] = false
         }
         
         NSUserDefaults.standardUserDefaults().setObject(settings, forKey: "settings")

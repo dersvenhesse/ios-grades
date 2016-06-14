@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if (rm.getRefreshing() == false) {
             rm.fetchGrades() { (error, gradelist, count) in
                 
-                if (error.type == .None) {
+                if (error.type == .none) {
                     grades = gradelist
                     
                     // notify when new entry is found
