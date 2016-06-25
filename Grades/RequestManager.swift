@@ -27,7 +27,7 @@ class RequestManager {
     var timestamp: NSDate?
     
     // grade texts to be excluded
-    let excludetexts = ["Durchschnittsnote Deutschlandstipendium", "ECTS-Kontostand: (fortlaufende Ermittlung)"]
+    let excludetexts = ["Durchschnittsnote Deutschlandstipendium", "ECTS-Kontostand: (fortlaufende Ermittlung)", "Kontostand: ECTS (fortlaufende Ermittlung)"]
 
     // attempt amount for specific requests to repeat requests
     var attempts = [RequestAttemptType: [String: Int]]()
