@@ -38,6 +38,7 @@ class GradesController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         NSUserDefaults.standardUserDefaults().setValue(version, forKey: "version")
 
         settingsButton.title = "⚙\u{0000FE0E}"
@@ -419,11 +420,14 @@ extension GradesController {
         }
     }
     
-    private func calculateTotalCreditpoints() -> Double {
+    private func calculateTotalCreditpoints(excludeZero: Bool = false) -> Double {
         var totalCps: Double = 0.0
         
         for (termIndex, _) in grades.enumerate() {
             for entry in grades[termIndex].1 {
+                if (excludeZero && entry.grade == 0) {
+                    continue
+                }
                 totalCps += entry.cp
             }
         }
@@ -431,10 +435,13 @@ extension GradesController {
         return totalCps
     }
     
-    private func calculateCreditpoints(termIndex: Int) -> Double {
+    private func calculateCreditpoints(termIndex: Int, excludeZero: Bool = false) -> Double {
         var cps: Double = 0.0
         
         for entry in grades[termIndex].1 {
+            if (excludeZero && entry.grade == 0) {
+                continue
+            }
             cps += entry.cp
         }
         
@@ -442,8 +449,8 @@ extension GradesController {
     }
     
     private func calculateTotalAverageGrade() -> Double {
-        let totalCps = calculateTotalCreditpoints()
-        
+        let totalCps = calculateTotalCreditpoints(true)
+
         var count: Int = 0
         var weighted: Double = 0.0
         
@@ -465,8 +472,8 @@ extension GradesController {
     }
     
     private func calculateAverageGrade(termIndex: Int) -> Double {
-        let cps = calculateCreditpoints(termIndex)
-        
+        let cps = calculateCreditpoints(termIndex, excludeZero: true)
+
         var count: Int = 0
         var weighted: Double = 0.0
         

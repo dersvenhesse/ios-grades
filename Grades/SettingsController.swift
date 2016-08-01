@@ -89,7 +89,6 @@ class SettingsController: UITableViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        
         table.reloadData()
         
         if (school.name == "") {
