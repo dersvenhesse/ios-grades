@@ -99,8 +99,6 @@ var schools = [
         key: "hftl",
         name: "Hochschule für Telekommunikation Leipzig",
         order: "T",
-        url: "qisweb.hispro.de",
-        urlTrail: "/tel/rds?state=",
-        gradelistIndices: [.lecture: 1, .term: 2, .grade: 3, .state: 4, .cp: 5]
+        url: "qis.tel.hispro.de"
     ),
 ]
