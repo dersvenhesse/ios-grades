@@ -14,7 +14,7 @@ The app is downloadable for free in the [iTunes App Store](https://itunes.apple.
 <img src="assets/screen3.png" width="30%" />
 
 # Contribution
-Fell free to contribute!  
+Feel free to contribute!  
 
 # License
 See [`LICENSE.txt`](LICENSE.txt) for more information.
