@@ -21,6 +21,7 @@ let testing = false
 enum Setting: String {
     case includeDetails = "includeDetails"
     case showDetailSwitch = "showDetailSwitch"
+    case simpleAverageSwitch = "simpleAverageSwitch"
 }
 
 // settings array using raw values
@@ -31,4 +32,7 @@ var settings: [String: Bool] = [
     
     // if set, a switch will be shown on the settings page
     Setting.showDetailSwitch.rawValue: false,
+    
+    // if set, the average grade calculation will not care for cp
+    Setting.simpleAverageSwitch.rawValue: false
 ]

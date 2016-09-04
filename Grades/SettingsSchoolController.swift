@@ -14,15 +14,15 @@ import UIKit
  */
 class SettingsSchoolController: UIViewController {
     
+    // variables
+    
+    private var alphabet = [String]()
+    private var orderedSchools: [[School]] = [[School]]()
+    
     // outlets
     
     @IBOutlet weak var table: UITableView!
 
-    // variables
-    
-    var alphabet = [String]()
-    var orderedSchools: [[School]] = [[School]]()
-    
     // view functions
     
     override func viewDidLoad() {

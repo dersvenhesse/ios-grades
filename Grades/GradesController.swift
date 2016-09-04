@@ -20,19 +20,19 @@ var lastErrorType = RequestErrorType.none
  */
 class GradesController: UIViewController {
     
+    // variables
+    
+    private var alertController: UIAlertController?
+    private let refreshControl = UIRefreshControl()
+    
+    private var statusLabelAnimated: Bool = false
+    
     // outlets
     
     @IBOutlet weak var table: UITableView!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     
     @IBOutlet weak var statusLabel: UILabel!
-    
-    // variables
-    
-    var alertController: UIAlertController?
-    let refreshControl = UIRefreshControl()
-    
-    var statusLabelAnimated: Bool = false
     
     // view functions
     
@@ -198,7 +198,7 @@ class GradesController: UIViewController {
         
         // settings
         if (defaults.valueForKey("settings") != nil) {
-            settings = defaults.objectForKey("settings")! as! [String: Bool]
+            settings.merge(defaults.objectForKey("settings")! as! [String: Bool])
         }
         
         // grades amount
@@ -449,7 +449,11 @@ extension GradesController {
     }
     
     private func calculateTotalAverageGrade() -> Double {
-        let totalCps = calculateTotalCreditpoints(true)
+        var totalCps: Double = 0
+
+        if (settings[Setting.simpleAverageSwitch.rawValue] == false) {
+            totalCps = calculateTotalCreditpoints(true)
+        }
 
         var count: Int = 0
         var weighted: Double = 0.0
@@ -472,8 +476,12 @@ extension GradesController {
     }
     
     private func calculateAverageGrade(termIndex: Int) -> Double {
-        let cps = calculateCreditpoints(termIndex, excludeZero: true)
-
+        var cps: Double = 0
+        
+        if (settings[Setting.simpleAverageSwitch.rawValue] == false) {
+            cps = calculateCreditpoints(termIndex, excludeZero: true)
+        }
+        
         var count: Int = 0
         var weighted: Double = 0.0
         

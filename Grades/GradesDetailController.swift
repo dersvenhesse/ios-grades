@@ -16,7 +16,7 @@ class GradesDetailController: UITableViewController {
 
     // variables
     
-    var grade = Grade()
+    internal var grade: Grade!
     
     // view functions
 

@@ -18,7 +18,11 @@ var school = School()
  * Controller for settings and setup page.
  */
 class SettingsController: UITableViewController {
-
+    
+    // variables
+    
+    internal var initialSetup = false
+    
     // outlets
     
     @IBOutlet var table: UITableView!
@@ -31,6 +35,8 @@ class SettingsController: UITableViewController {
     @IBOutlet weak var detailSwitchCell: UITableViewCell!
     @IBOutlet weak var detailSwitch: UISwitch!
 
+    @IBOutlet weak var simpleAverageSwitch: UISwitch!
+    
     @IBOutlet weak var loginCell: UITableViewCell!
     @IBOutlet weak var loginButton: UIButton!
     
@@ -49,15 +55,18 @@ class SettingsController: UITableViewController {
     }
     
     @IBAction func detailSwitchChanged(sender: AnyObject) {
-        settings[Setting.includeDetails.rawValue]  = sender.on
-        NSUserDefaults.standardUserDefaults().setObject(settings, forKey: "settings")
-        
         RequestManager.sharedInstance.timestamp = nil
+
+        settings[Setting.includeDetails.rawValue] = sender.on
+        NSUserDefaults.standardUserDefaults().setObject(settings, forKey: "settings")
     }
     
-    // variables
-    
-    var initialSetup = false
+    @IBAction func simpleAverageSwitchChanged(sender: AnyObject) {
+        RequestManager.sharedInstance.timestamp = nil
+
+        settings[Setting.simpleAverageSwitch.rawValue] = sender.on
+        NSUserDefaults.standardUserDefaults().setObject(settings, forKey: "settings")
+    }
     
     // view functions
     
@@ -104,6 +113,8 @@ class SettingsController: UITableViewController {
         detailSwitchCell.hidden = !settings[Setting.showDetailSwitch.rawValue]!
         detailSwitch.on = settings[Setting.includeDetails.rawValue]!
         
+        simpleAverageSwitch.on = settings[Setting.simpleAverageSwitch.rawValue]!
+        
         if ((table.indexPathForSelectedRow) != nil) {
             table.deselectRowAtIndexPath(table.indexPathForSelectedRow!, animated: false)
         }
@@ -115,6 +126,7 @@ class SettingsController: UITableViewController {
         
         // reset grades
         grades = []
+        amount = -1
         RequestManager.sharedInstance.timestamp = nil
         
         if (key != "") {
