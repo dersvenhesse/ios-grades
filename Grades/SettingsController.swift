@@ -37,9 +37,6 @@ class SettingsController: UITableViewController {
 
     @IBOutlet weak var simpleAverageSwitch: UISwitch!
     
-    @IBOutlet weak var loginCell: UITableViewCell!
-    @IBOutlet weak var loginButton: UIButton!
-    
     // actions
     
     @IBAction func loginClicked(sender: AnyObject) {
@@ -77,16 +74,10 @@ class SettingsController: UITableViewController {
             username = ""
             password = ""
             
-            loginCell.hidden = false
-            detailSwitchCell.hidden = true
-            
             self.title = "Grades-Setup"
             self.navigationItem.setHidesBackButton(true, animated: false)
             self.navigationItem.leftBarButtonItem = nil
             self.navigationItem.rightBarButtonItem = nil
-        }
-        else {
-            loginCell.hidden = true
         }
         
         usernameInput.delegate = self
@@ -117,7 +108,7 @@ class SettingsController: UITableViewController {
         
         if ((table.indexPathForSelectedRow) != nil) {
             table.deselectRowAtIndexPath(table.indexPathForSelectedRow!, animated: false)
-        }
+        }        
     }
     
     // helper
@@ -150,6 +141,7 @@ class SettingsController: UITableViewController {
 
 extension SettingsController {
     
+    
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String {
         
         var title = ""
@@ -161,13 +153,35 @@ extension SettingsController {
             title = "QIS-Zugangsdaten"
             break
         case 2:
-            title = settings[Setting.showDetailSwitch.rawValue]! ? "Weiteres" : ""
+            title = initialSetup ? "" : "Sonstiges"
             break
         default:
             break
         }
         
         return title
+    }
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        var rows = 0
+        switch(section) {
+        case 0:
+            rows = 1
+            break
+        case 1:
+            rows = 2
+            break
+        case 2:
+            rows = initialSetup ? 0 : settings[Setting.showDetailSwitch.rawValue]! ? 2 : 1
+            break
+        case 3:
+            rows = initialSetup ? 1 : 0
+        default:
+            break
+        }
+        
+        return rows
     }
 }
 
