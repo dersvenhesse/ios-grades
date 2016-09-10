@@ -60,7 +60,7 @@ var schools = [
         key: "hskoblenz",
         name: "Hochschule Koblenz",
         order: "K",
-        url: "rheinahrcampus.de"
+        url: "qisserver.hs-koblenz.de"
     ),
     
     // M

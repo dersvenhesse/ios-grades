@@ -529,10 +529,22 @@ class RequestManager {
      * Save row indices for specific table headers.
      */
     private func createGradelistIndicesFromData(data: [String]) {
-        school.gradelistIndices[.lecture] = data.indexOf("Prüfungstext")!
-        school.gradelistIndices[.term] = data.indexOf("Semester")!
-        school.gradelistIndices[.grade] = data.indexOf("Note")!
-        school.gradelistIndices[.state] = data.indexOf("Status")!
+        if (data.contains("Prüfungstext")) {
+            school.gradelistIndices[.lecture] = data.indexOf("Prüfungstext")!
+        }
+        
+        if (data.contains("Semester")) {
+            school.gradelistIndices[.term] = data.indexOf("Semester")!
+        }
+        
+        if (data.contains("Note")) {
+            school.gradelistIndices[.grade] = data.indexOf("Note")!
+        }
+        
+        if (data.contains("Status")) {
+            school.gradelistIndices[.state] = data.indexOf("Status")!
+        }
+        
         if (data.contains("Credit Points")) {
             school.gradelistIndices[.cp] = data.indexOf("Credit Points")!
         }

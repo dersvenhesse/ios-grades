@@ -447,13 +447,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="HND-YJ-Zbj">
-                                                    <rect key="frame" x="528" y="6" width="51" height="31"/>
-                                                    <color key="onTintColor" red="0.76862745099999996" green="0.26274509800000001" blue="0.3294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <connections>
-                                                        <action selector="simpleAverageSwitchChanged:" destination="H1K-Qu-AIX" eventType="valueChanged" id="hS9-ou-yxu"/>
-                                                    </connections>
-                                                </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="⌀-Berechnung ohne CP" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PWn-D1-ZN3">
                                                     <rect key="frame" x="18" y="11" width="180" height="21"/>
                                                     <constraints>
@@ -470,6 +463,13 @@
                                                         </mask>
                                                     </variation>
                                                 </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="HND-YJ-Zbj">
+                                                    <rect key="frame" x="528" y="6" width="51" height="31"/>
+                                                    <color key="onTintColor" red="0.76862745099999996" green="0.26274509800000001" blue="0.3294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <connections>
+                                                        <action selector="simpleAverageSwitchChanged:" destination="H1K-Qu-AIX" eventType="valueChanged" id="hS9-ou-yxu"/>
+                                                    </connections>
+                                                </switch>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="centerY" secondItem="PWn-D1-ZN3" secondAttribute="centerY" id="1QV-Z7-R3v"/>
