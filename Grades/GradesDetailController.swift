@@ -26,13 +26,13 @@ class GradesDetailController: UITableViewController {
         updateView()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         updateView()
     }
     
     // helper
     
-    private func updateView() {
+    fileprivate func updateView() {
         self.title = grade.lecture
     }
 }
@@ -41,11 +41,11 @@ class GradesDetailController: UITableViewController {
 
 extension GradesDetailController {
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return grade.details!.scores.count == 0 ? 1 : 2
     }
     
-    override func tableView(tableView : UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView : UITableView, titleForHeaderInSection section: Int) -> String? {
         if (section == 0) {
             return "Notenspiegel"
         }
@@ -55,7 +55,7 @@ extension GradesDetailController {
         return ""
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (section == 0) {
             return grade.details!.scores.count == 0 ? 1 : grade.details!.scores.count
         }
@@ -65,15 +65,15 @@ extension GradesDetailController {
         return 0
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let entry = grade.details!
-        let scores = entry.scores[indexPath.row]
+        let scores = entry.scores[(indexPath as NSIndexPath).row]
         
         let identifier = "detailCell"
-        let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! DetailTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! DetailTableViewCell
         
-        if (indexPath.section == 0) {
+        if ((indexPath as NSIndexPath).section == 0) {
             if (entry.scores.count == 0 && entry.scoresStatus == .notEnoughParticipants) {
                 cell.textLabel!.text = "Zu wenige Leistungen für Notenspiegel vorliegend."
             }
@@ -84,18 +84,18 @@ extension GradesDetailController {
                 cell.descriptionLabel.text = "\(scores.text)"
                 
                 if (scores.isOwn) {
-                    cell.descriptionLabel.font = UIFont.boldSystemFontOfSize(17.0)
+                    cell.descriptionLabel.font = UIFont.boldSystemFont(ofSize: 17.0)
                 }
                 
                 cell.scoreLabel.text  = "\(scores.amount)"
             }
         }
-        else if (indexPath.section == 1) {
-            if (indexPath.row == 0 && entry.participants != 0) {
+        else if ((indexPath as NSIndexPath).section == 1) {
+            if ((indexPath as NSIndexPath).row == 0 && entry.participants != 0) {
                 cell.descriptionLabel.text = "Teilnehmer"
                 cell.scoreLabel.text  = "\(entry.participants)"
             }
-            else if (indexPath.row == 1 && entry.average != "") {
+            else if ((indexPath as NSIndexPath).row == 1 && entry.average != "") {
                 cell.descriptionLabel.text = "Durchschnittsnote"
                 cell.scoreLabel.text  = "\(entry.average)"
             }

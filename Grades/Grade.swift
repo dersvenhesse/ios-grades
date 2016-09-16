@@ -38,7 +38,7 @@ class Grade: CustomStringConvertible {
         return "(\(lecture), \(term), \(grade), \(cp), \(state))"
     }
     
-    func equals(grade: Grade) -> Bool {
+    func equals(_ grade: Grade) -> Bool {
         return
             self.lecture == grade.lecture &&
             self.term == grade.term &&

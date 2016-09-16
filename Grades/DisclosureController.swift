@@ -27,11 +27,11 @@ class DisclosureController: UIViewController {
         var html = ""
         
         // load from local file
-        let file = NSBundle.mainBundle().pathForResource("disclosure", ofType: "html")
+        let file = Bundle.main.path(forResource: "disclosure", ofType: "html")
         
         if (file != nil) {
             do {
-                html = try String(contentsOfFile: file!, encoding: NSUTF8StringEncoding)
+                html = try String(contentsOfFile: file!, encoding: String.Encoding.utf8)
             }
             catch { }
         }
@@ -39,9 +39,9 @@ class DisclosureController: UIViewController {
         if (html != "") {
             
             // replace some informations
-            html = html.stringByReplacingOccurrencesOfString("<%contact%>", withString: PrivateConfiguration.disclosureContact)
-            html = html.stringByReplacingOccurrencesOfString("<%imprint%>", withString: PrivateConfiguration.disclosureImprint)
-            html = html.stringByReplacingOccurrencesOfString("<%author%>", withString: PrivateConfiguration.disclosureAuthor)
+            html = html.replacingOccurrences(of: "<%contact%>", with: PrivateConfiguration.disclosureContact)
+            html = html.replacingOccurrences(of: "<%imprint%>", with: PrivateConfiguration.disclosureImprint)
+            html = html.replacingOccurrences(of: "<%author%>", with: PrivateConfiguration.disclosureAuthor)
             
             // show
             webview.loadHTMLString(html, baseURL: nil)
@@ -54,11 +54,11 @@ class DisclosureController: UIViewController {
 
 extension DisclosureController: UIWebViewDelegate {
     
-    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         switch navigationType {
-        case .LinkClicked:
+        case .linkClicked:
             // open links in browser
-            UIApplication.sharedApplication().openURL(request.URL!)
+            UIApplication.shared.openURL(request.url!)
             return false
         default:
             return true

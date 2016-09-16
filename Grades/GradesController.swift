@@ -22,10 +22,10 @@ class GradesController: UIViewController {
     
     // variables
     
-    private var alertController: UIAlertController?
-    private let refreshControl = UIRefreshControl()
+    fileprivate var alertController: UIAlertController?
+    fileprivate let refreshControl = UIRefreshControl()
     
-    private var statusLabelAnimated: Bool = false
+    fileprivate var statusLabelAnimated: Bool = false
     
     // outlets
     
@@ -39,28 +39,28 @@ class GradesController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NSUserDefaults.standardUserDefaults().setValue(version, forKey: "version")
+        UserDefaults.standard.setValue(version, forKey: "version")
 
         settingsButton.title = "⚙\u{0000FE0E}"
 
         self.table.delegate = self
         self.table.dataSource = self
         
-        refreshControl.addTarget(self, action: #selector(GradesController.refresh(_:)), forControlEvents: .ValueChanged)
+        refreshControl.addTarget(self, action: #selector(GradesController.refresh(_:)), for: .valueChanged)
         table.addSubview(refreshControl)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GradesController.applicationWillEnterForeground), name:
-            UIApplicationWillEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GradesController.applicationWillEnterForeground), name:
+            NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
 
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         updateView()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if ((table.indexPathForSelectedRow) != nil) {
-            table.deselectRowAtIndexPath(table.indexPathForSelectedRow!, animated: false)
+            table.deselectRow(at: table.indexPathForSelectedRow!, animated: false)
         }
     }
     
@@ -70,11 +70,11 @@ class GradesController: UIViewController {
     
     // helper
     
-    private func updateView() {
+    fileprivate func updateView() {
         
         // dismiss old alerts
         if (alertController != nil) {
-            alertController!.dismissViewControllerAnimated(false, completion: nil)
+            alertController!.dismiss(animated: false, completion: nil)
         }
         
         if (grades.count == 0) {
@@ -86,7 +86,7 @@ class GradesController: UIViewController {
         
         if (username == "" && (school.name == "" || school.url == "")) {
             self.table.reloadData()
-            performSegueWithIdentifier("showSetup", sender: nil)
+            performSegue(withIdentifier: "showSetup", sender: nil)
         }
         else {
             
@@ -94,13 +94,13 @@ class GradesController: UIViewController {
             let rm = RequestManager.sharedInstance
             rm.delegate = self
             
-            if (rm.getRefreshing() == false && ((rm.timestamp == nil || NSDate().timeIntervalSinceDate(rm.timestamp!) > 60) || lastErrorType != .none)) {
+            if (rm.getRefreshing() == false && ((rm.timestamp == nil || Date().timeIntervalSince(rm.timestamp! as Date) > 60) || lastErrorType != .none)) {
                 
                 beginRefresh()
                 
                 rm.fetchGrades() { (error, gradelist, count) in
                     
-                    self.refreshControl.attributedTitle = NSAttributedString(string: "Zuletzt aktualisiert am \(Functions.formatTimestamp(rm.timestamp!))")
+                    self.refreshControl.attributedTitle = NSAttributedString(string: "Zuletzt aktualisiert am \(Functions.formatTimestamp(timestamp: rm.timestamp!))")
                     
                     lastErrorType = error.type
                     
@@ -109,12 +109,12 @@ class GradesController: UIViewController {
                         amount = count
                         
                         self.table.reloadData()
-                        self.updateStatusLabelText()
+                        self.updateStatusLabel()
                     }
                     else {
                         
                         // alert only when view is visible
-                        if (self.isViewLoaded() && self.view.window != nil) {
+                        if (self.isViewLoaded && self.view.window != nil) {
                             
                             var title = ""
                             var message = ""
@@ -150,16 +150,16 @@ class GradesController: UIViewController {
                             // update table
                             self.table.reloadData()
                             if (rm.timestamp != nil) {
-                                self.updateStatusLabelText("\(title) am \(Functions.formatTimestamp(rm.timestamp!))")
+                                self.updateStatusLabel(text: "\(title) am \(Functions.formatTimestamp(timestamp: rm.timestamp!))")
                             }
                             
                             // prepare and show alert
-                            self.alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+                            self.alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
                             
-                            self.alertController!.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+                            self.alertController!.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
                             
                             if (self.presentedViewController == nil) {
-                                self.presentViewController(self.alertController!, animated: true, completion: nil)
+                                self.present(self.alertController!, animated: true, completion: nil)
                             }
                         }
                         
@@ -173,22 +173,22 @@ class GradesController: UIViewController {
         }
     }
     
-    private func readSettings() {
+    fileprivate func readSettings() {
         
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         
         // school-key
-        if (defaults.valueForKey("key") != nil) {
+        if (defaults.value(forKey: "key") != nil) {
             for s in schools {
-                if s.key == defaults.stringForKey("key")! {
+                if s.key == defaults.string(forKey: "key")! {
                     school = s
                 }
             }
         }
         
         // username
-        if (defaults.valueForKey("username") != nil) {
-            username = defaults.stringForKey("username")!
+        if (defaults.value(forKey: "username") != nil) {
+            username = defaults.string(forKey: "username")!
         }
         
         // password
@@ -197,13 +197,13 @@ class GradesController: UIViewController {
         }
         
         // settings
-        if (defaults.valueForKey("settings") != nil) {
-            settings.merge(defaults.objectForKey("settings")! as! [String: Bool])
+        if (defaults.value(forKey: "settings") != nil) {
+            settings.merge(dict: defaults.object(forKey: "settings")! as! [String: Bool])
         }
         
         // grades amount
-        if (defaults.valueForKey("amount") != nil) {
-            amount = defaults.integerForKey("amount")
+        if (defaults.value(forKey: "amount") != nil) {
+            amount = defaults.integer(forKey: "amount")
         }
     }
 }
@@ -213,7 +213,7 @@ class GradesController: UIViewController {
 extension GradesController: GradeDetailDelegate {
     func attachDetail(error: DetailRequestError, grade: Grade, detail: GradeDetail?) {
         if (error.type == .none && detail != nil) {
-            outer: for (termIndex, _) in grades.enumerate() {
+            outer: for (termIndex, _) in grades.enumerated() {
                 for entry in grades[termIndex].1 {
                     if (entry.equals(grade)) {
                         entry.details = detail!
@@ -224,7 +224,7 @@ extension GradesController: GradeDetailDelegate {
             table.reloadData()
         }
         else {
-            self.updateStatusLabelText("Fehlercode: \(error.code)", animated: true)
+            self.updateStatusLabel(text: "Fehlercode: \(error.code)", animated: true)
         }
     }
 }
@@ -233,42 +233,42 @@ extension GradesController: GradeDetailDelegate {
 
 extension GradesController: UITableViewDataSource, UITableViewDelegate {
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return grades.count
     }
     
-    func tableView(tableView : UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView : UITableView, titleForHeaderInSection section: Int) -> String? {
         
         var key = grades[section].0
         
         // update strings for view
-        key = key.stringByReplacingOccurrencesOfString("SoSe", withString: "Sommersemester")
-        key = key.stringByReplacingOccurrencesOfString("WiSe", withString: "Wintersemester")
+        key = key.replacingOccurrences(of: "SoSe", with: "Sommersemester")
+        key = key.replacingOccurrences(of: "WiSe", with: "Wintersemester")
         
         if (key == "") {
             key = "Verschiedene Semester"
         }
         
-        let cps = calculateCreditpoints(section)
+        let cps = calculateCreditpoints(for: section)
         if (cps > 0) {
-            key += " – \(formatCreditpoints(cps)) CP"
+            key += " – \(format(cps: cps)) CP"
         }
         
-        let averageGrade = calculateAverageGrade(section)
+        let averageGrade = calculateAverageGrade(for: section)
         if (!averageGrade.isNaN && !averageGrade.isInfinite && averageGrade != 0) {
-            key += " – ⌀ \(self.formatGrade(averageGrade, precision: 2))"
+            key += " – ⌀ \(self.format(grade: averageGrade, to: 2))"
         }
         
         return key
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return grades[section].1.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let entry = grades[indexPath.section].1[indexPath.row]
+        let entry = grades[(indexPath as NSIndexPath).section].1[(indexPath as NSIndexPath).row]
         
         // update strings for view
         let lecture = entry.lecture
@@ -276,7 +276,7 @@ extension GradesController: UITableViewDataSource, UITableViewDelegate {
         let state = entry.state
         let grade = entry.grade
         
-        var gradeString = grade == 0 ? state : formatGrade(grade)
+        var gradeString = grade == 0 ? state : format(grade: grade)
         if (gradeString == "bestanden" || gradeString == "BE") {
             gradeString = "✓"
         }
@@ -287,25 +287,25 @@ extension GradesController: UITableViewDataSource, UITableViewDelegate {
         // create cell
         let identifier = "gradeCell"
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! GradeTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! GradeTableViewCell
         
         if (settings[Setting.includeDetails.rawValue]!) {
             if (entry.details != nil) {
                 cell.accessoryView = nil
-                cell.accessoryType = .DisclosureIndicator
+                cell.accessoryType = .disclosureIndicator
             }
             else {
                 cell.accessoryView = UIView()
-                cell.accessoryView!.frame = CGRectMake(0.0, 0.0, 18.0, 0.0)
+                cell.accessoryView!.frame = CGRect(x: 0.0, y: 0.0, width: 18.0, height: 0.0)
             }
         }
         else {
             cell.accessoryView = UIView()
-            cell.accessoryView!.frame = CGRectMake(0.0, 0.0, 0.0, 0.0)
+            cell.accessoryView!.frame = CGRect(x: 0.0, y: 0.0, width: 0.0, height: 0.0)
         }
         
         cell.lectureLabel.text = "\(lecture)"
-        cell.cpLabel.text = cp > 0 ? "\(formatCreditpoints(cp)) CP" : "\(state)"
+        cell.cpLabel.text = cp > 0 ? "\(format(cps: cp)) CP" : "\(state)"
         cell.gradeLabel.text = "\(gradeString)"
         
         return cell
@@ -316,31 +316,31 @@ extension GradesController: UITableViewDataSource, UITableViewDelegate {
 
 extension GradesController {
     
-    func refresh(refreshControl: UIRefreshControl) {
+    func refresh(_ refreshControl: UIRefreshControl) {
         updateView()
     }
     
-    private func beginRefresh() {
+    fileprivate func beginRefresh() {
         
         let rm = RequestManager.sharedInstance
         if (rm.timestamp != nil) {
-            refreshControl.attributedTitle = NSAttributedString(string: "Zuletzt aktualisiert am \(Functions.formatTimestamp(rm.timestamp!))")
+            refreshControl.attributedTitle = NSAttributedString(string: "Zuletzt aktualisiert am \(Functions.formatTimestamp(timestamp: rm.timestamp!))")
         }
         
         refreshControl.beginRefreshing()
-        refreshControl.enabled = false
+        refreshControl.isEnabled = false
         
-        table.scrollRectToVisible(CGRectMake(0, 0, 1, 1), animated: true)
+        table.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
         statusLabel.text = "Aktualisiert gerade"
         
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
     }
     
-    private func endRefresh() {
+    fileprivate func endRefresh() {
         refreshControl.endRefreshing()
-        refreshControl.enabled = true
+        refreshControl.isEnabled = true
         
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 }
 
@@ -348,28 +348,28 @@ extension GradesController {
 
 extension GradesController {
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "showSetup") {
-            let vc = segue.destinationViewController as! SettingsController
+            let vc = segue.destination as! SettingsController
             vc.initialSetup = true
         }
         else if (segue.identifier == "showDetail") {
-            let vc = segue.destinationViewController as! GradesDetailController
+            let vc = segue.destination as! GradesDetailController
             
             let indexPath = table.indexPathForSelectedRow
-            vc.grade = grades[indexPath!.section].1[indexPath!.row]
+            vc.grade = grades[(indexPath! as NSIndexPath).section].1[(indexPath! as NSIndexPath).row]
         }
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if (identifier == "showDetail") {
             let indexPath = table.indexPathForSelectedRow
             
-            if (grades[indexPath!.section].1[indexPath!.row].details != nil) {
+            if (grades[(indexPath! as NSIndexPath).section].1[(indexPath! as NSIndexPath).row].details != nil) {
                 return true
             }
             else {
-                table.deselectRowAtIndexPath(table.indexPathForSelectedRow!, animated: false)
+                table.deselectRow(at: table.indexPathForSelectedRow!, animated: false)
                 return false
             }
         }
@@ -381,7 +381,7 @@ extension GradesController {
 
 extension GradesController {
     
-    private func updateStatusLabelText(text: String = "", animated: Bool = false) {
+    fileprivate func updateStatusLabel(text: String = "", animated: Bool = false) {
         var labelText = ""
         
         if (amount != -1) {
@@ -390,18 +390,18 @@ extension GradesController {
             
             let totalCps = self.calculateTotalCreditpoints()
             if (totalCps > 0) {
-                labelText += " – \(self.formatCreditpoints(totalCps)) CP"
+                labelText += " – \(self.format(cps: totalCps)) CP"
             }
             
             let totalAverageGrade = self.calculateTotalAverageGrade()
             if (!totalAverageGrade.isNaN && !totalAverageGrade.isInfinite && totalAverageGrade != 0) {
-                labelText += " – ⌀ \(self.formatGrade(totalAverageGrade, precision: 2))"
+                labelText += " – ⌀ \(self.format(grade: totalAverageGrade, to: 2))"
             }
         }
         
         if (animated && text != "") {
             if (!statusLabelAnimated) {
-                UIView.animateWithDuration(4.0, animations: {
+                UIView.animate(withDuration: 4.0, animations: {
                     self.statusLabel.text = text
                     self.statusLabel.alpha = 0.0
                     self.statusLabelAnimated = true
@@ -420,10 +420,10 @@ extension GradesController {
         }
     }
     
-    private func calculateTotalCreditpoints(excludeZero: Bool = false) -> Double {
+    fileprivate func calculateTotalCreditpoints(excludeZero: Bool = false) -> Double {
         var totalCps: Double = 0.0
         
-        for (termIndex, _) in grades.enumerate() {
+        for (termIndex, _) in grades.enumerated() {
             for entry in grades[termIndex].1 {
                 if (excludeZero && entry.grade == 0) {
                     continue
@@ -435,7 +435,7 @@ extension GradesController {
         return totalCps
     }
     
-    private func calculateCreditpoints(termIndex: Int, excludeZero: Bool = false) -> Double {
+    fileprivate func calculateCreditpoints(for termIndex: Int, excludeZero: Bool = false) -> Double {
         var cps: Double = 0.0
         
         for entry in grades[termIndex].1 {
@@ -448,17 +448,17 @@ extension GradesController {
         return cps
     }
     
-    private func calculateTotalAverageGrade() -> Double {
+    fileprivate func calculateTotalAverageGrade() -> Double {
         var totalCps: Double = 0
 
         if (settings[Setting.simpleAverageSwitch.rawValue] == false) {
-            totalCps = calculateTotalCreditpoints(true)
+            totalCps = calculateTotalCreditpoints(excludeZero: true)
         }
 
         var count: Int = 0
         var weighted: Double = 0.0
         
-        for (termIndex, _) in grades.enumerate() {
+        for (termIndex, _) in grades.enumerated() {
             for entry in grades[termIndex].1 {
                 if (entry.grade != 0) {
                     if (totalCps != 0) {
@@ -475,11 +475,11 @@ extension GradesController {
         return (totalCps != 0) ? weighted/totalCps : weighted/Double(count)
     }
     
-    private func calculateAverageGrade(termIndex: Int) -> Double {
+    fileprivate func calculateAverageGrade(for termIndex: Int) -> Double {
         var cps: Double = 0
         
         if (settings[Setting.simpleAverageSwitch.rawValue] == false) {
-            cps = calculateCreditpoints(termIndex, excludeZero: true)
+            cps = calculateCreditpoints(for: termIndex, excludeZero: true)
         }
         
         var count: Int = 0
@@ -500,20 +500,20 @@ extension GradesController {
         return (cps != 0) ? weighted/cps : weighted/Double(count)
     }
     
-    private func formatGrade(grade: Double, precision: Int = 1) -> String {
+    fileprivate func format(grade: Double, to precision: Int = 1) -> String {
         let format = "%.\(precision)f"
         
-        return "\(String(format: format, grade))".stringByReplacingOccurrencesOfString(".", withString: ",")
+        return "\(String(format: format, grade))".replacingOccurrences(of: ".", with: ",")
     }
     
-    private func formatCreditpoints(cps: Double) -> String {
+    fileprivate func format(cps: Double) -> String {
         var s: String
         
-        if (cps % 1 == 0) {
+        if (cps.truncatingRemainder(dividingBy: 1) == 0) {
             s = "\(Int(cps))"
         }
         else {
-            s = "\(cps)".stringByReplacingOccurrencesOfString(".", withString: ",")
+            s = "\(cps)".replacingOccurrences(of: ".", with: ",")
         }
         
         return s

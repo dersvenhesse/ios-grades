@@ -39,30 +39,30 @@ class SettingsController: UITableViewController {
     
     // actions
     
-    @IBAction func loginClicked(sender: AnyObject) {
-        navigationController?.popToRootViewControllerAnimated(true)
+    @IBAction func loginClicked(_ sender: AnyObject) {
+        navigationController!.popToRootViewController(animated: true)
     }
     
-    @IBAction func usernameChanged(sender: AnyObject) {
-        setValues(usernameInput, key: "username", global: &username)
+    @IBAction func usernameChanged(_ sender: AnyObject) {
+        setValues(input: usernameInput, key: "username", global: &username)
     }
     
-    @IBAction func passwordChanged(sender: AnyObject) {
-        setValues(passwordInput, key: "password", global: &password)
+    @IBAction func passwordChanged(_ sender: AnyObject) {
+        setValues(input: passwordInput, key: "password", global: &password)
     }
     
-    @IBAction func detailSwitchChanged(sender: AnyObject) {
+    @IBAction func detailSwitchChanged(_ sender: AnyObject) {
         RequestManager.sharedInstance.timestamp = nil
 
-        settings[Setting.includeDetails.rawValue] = sender.on
-        NSUserDefaults.standardUserDefaults().setObject(settings, forKey: "settings")
+        settings[Setting.includeDetails.rawValue] = sender.isOn
+        UserDefaults.standard.set(settings, forKey: "settings")
     }
     
-    @IBAction func simpleAverageSwitchChanged(sender: AnyObject) {
+    @IBAction func simpleAverageSwitchChanged(_ sender: AnyObject) {
         RequestManager.sharedInstance.timestamp = nil
 
-        settings[Setting.simpleAverageSwitch.rawValue] = sender.on
-        NSUserDefaults.standardUserDefaults().setObject(settings, forKey: "settings")
+        settings[Setting.simpleAverageSwitch.rawValue] = sender.isOn
+        UserDefaults.standard.set(settings, forKey: "settings")
     }
     
     // view functions
@@ -88,7 +88,7 @@ class SettingsController: UITableViewController {
         view.addGestureRecognizer(uitgr)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         table.reloadData()
         
         if (school.name == "") {
@@ -101,19 +101,19 @@ class SettingsController: UITableViewController {
         usernameInput.text = "\(username)"
         passwordInput.text = "\(password)"
         
-        detailSwitchCell.hidden = !settings[Setting.showDetailSwitch.rawValue]!
-        detailSwitch.on = settings[Setting.includeDetails.rawValue]!
+        detailSwitchCell.isHidden = !settings[Setting.showDetailSwitch.rawValue]!
+        detailSwitch.isOn = settings[Setting.includeDetails.rawValue]!
         
-        simpleAverageSwitch.on = settings[Setting.simpleAverageSwitch.rawValue]!
+        simpleAverageSwitch.isOn = settings[Setting.simpleAverageSwitch.rawValue]!
         
         if ((table.indexPathForSelectedRow) != nil) {
-            table.deselectRowAtIndexPath(table.indexPathForSelectedRow!, animated: false)
+            table.deselectRow(at: table.indexPathForSelectedRow!, animated: false)
         }        
     }
     
     // helper
  
-    private func setValues(input: UITextField, key: String, inout global: String) {
+    fileprivate func setValues(input: UITextField, key: String, global: inout String) {
         
         // reset grades
         grades = []
@@ -127,7 +127,7 @@ class SettingsController: UITableViewController {
                 try! keychain.set(global, key: "password")
             }
             else if (key == "username") {
-                let defaults = NSUserDefaults.standardUserDefaults()
+                let defaults = UserDefaults.standard
                 defaults.setValue(global, forKey: key)
             }
         }
@@ -142,7 +142,7 @@ class SettingsController: UITableViewController {
 extension SettingsController {
     
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String {
         
         var title = ""
         switch(section) {
@@ -162,7 +162,7 @@ extension SettingsController {
         return title
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         var rows = 0
         switch(section) {
@@ -193,7 +193,7 @@ extension SettingsController: UITextFieldDelegate {
         view.endEditing(true)
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }

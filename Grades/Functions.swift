@@ -19,16 +19,16 @@ struct Functions {
         
         localNotification.alertAction = nil
         localNotification.alertBody = text
-        localNotification.fireDate = NSDate(timeIntervalSinceNow: 10)
+        localNotification.fireDate = Date(timeIntervalSinceNow: 10)
         
-        UIApplication.sharedApplication().scheduleLocalNotification(localNotification)
+        UIApplication.shared.scheduleLocalNotification(localNotification)
     }
     
     /* 
      * Delay a callback.
      */
-    static func delay(delay: Double, closure: () -> ()) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), closure)
+    static func delay(delay: Double, closure: @escaping () -> ()) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
     }
     
     /* 
@@ -39,10 +39,10 @@ struct Functions {
         let regex = try! NSRegularExpression(pattern: regex, options: [])
         
         let string = text as NSString
-        let results = regex.matchesInString(text, options: [], range: NSMakeRange(0, string.length))
+        let results = regex.matches(in: text, options: [], range: NSMakeRange(0, string.length))
         
         return results.map {
-            string.substringWithRange($0.range)
+            string.substring(with: $0.range)
         }
     }
     
@@ -52,25 +52,25 @@ struct Functions {
     static func stripHtml(string: String) -> String {
         
         // strip html
-        var stripped = string.stringByReplacingOccurrencesOfString("<[^>]+>", withString: "", options: .RegularExpressionSearch, range: nil)
+        var stripped = string.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
         
         // strip spaces
-        stripped = stripped.stringByReplacingOccurrencesOfString("&nbsp;", withString: "")
+        stripped = stripped.replacingOccurrences(of: "&nbsp;", with: "")
         
         // strip whitespace
-        let components = stripped.componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).filter({!$0.characters.isEmpty})
+        let components = stripped.components(separatedBy: CharacterSet.whitespacesAndNewlines).filter({!$0.characters.isEmpty})
         
-        return components.joinWithSeparator(" ")
+        return components.joined(separator: " ")
     }
     
     
     /*
      * Format timestamp to readable (german) format.
      */
-    static func formatTimestamp(timestamp: NSDate) -> String {
-        let dateFormatter = NSDateFormatter()
+    static func formatTimestamp(timestamp: Date) -> String {
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.YY, HH:mm"
         
-        return "\(dateFormatter.stringFromDate(timestamp)) Uhr"
+        return "\(dateFormatter.string(from: timestamp)) Uhr"
     }
 }

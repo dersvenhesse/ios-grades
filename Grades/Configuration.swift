@@ -9,7 +9,7 @@
 import KeychainAccess
 
 // holds current app version
-let version = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"] as! String
+let version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
 
 // holds access to keychain to save the password
 let keychain = Keychain(service: PrivateConfiguration.keychainService)

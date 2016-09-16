@@ -14,22 +14,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
         // status bar
-        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: true)
+        UIApplication.shared.statusBarStyle = .lightContent
         
         // notifications and background fetch
-        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
-        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+        UIApplication.shared.registerUserNotificationSettings(settings)
         
         // background refresh
-        UIApplication.sharedApplication().setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         
         return true
     }
     
-    func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
             
         let rm = RequestManager.sharedInstance
         rm.delegate = nil
@@ -43,19 +43,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                     // notify when new entry is found
                     if (amount > 0 && count != 0 && count > amount) {
-                        Functions.notification("Neue Eintragung im QIS")
+                        Functions.notification(text: "Neue Eintragung im QIS")
                     }
                     amount = count
                     
-                    completionHandler(.NewData)
+                    completionHandler(.newData)
                 }
                 else {
-                    completionHandler(.NoData)
+                    completionHandler(.noData)
                 }
             }
         }
         else {
-            completionHandler(.NoData)
+            completionHandler(.noData)
         }
 
     }

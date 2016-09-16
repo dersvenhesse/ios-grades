@@ -16,8 +16,8 @@ class SettingsSchoolController: UIViewController {
     
     // variables
     
-    private var alphabet = [String]()
-    private var orderedSchools: [[School]] = [[School]]()
+    fileprivate var alphabet = [String]()
+    fileprivate var orderedSchools: [[School]] = [[School]]()
     
     // outlets
     
@@ -37,7 +37,7 @@ class SettingsSchoolController: UIViewController {
     
     // helper
     
-    private func setSchoolsForTable() {
+    fileprivate func setSchoolsForTable() {
         var previousOrder: Character = "-"
         
         // create alphabet from schools as sections
@@ -58,15 +58,15 @@ class SettingsSchoolController: UIViewController {
 
 extension SettingsSchoolController: UITableViewDataSource, UITableViewDelegate {
 
-    func tableView(tableView : UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView : UITableView, titleForHeaderInSection section: Int) -> String? {
         return alphabet[section]
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return orderedSchools.count
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return orderedSchools[section].count
     }
     
@@ -80,49 +80,49 @@ extension SettingsSchoolController: UITableViewDataSource, UITableViewDelegate {
      }
      */
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let identifier = "schoolCell"
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         
-        cell.textLabel!.textColor = UIColor.blackColor()
-        cell.textLabel!.text = "\(orderedSchools[indexPath.section][indexPath.row].name)"
+        cell.textLabel!.textColor = UIColor.black
+        cell.textLabel!.text = "\(orderedSchools[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row].name)"
         
         // show checkmark if school is selected school
-        if (orderedSchools[indexPath.section][indexPath.row].name == school.name) {
-            cell.accessoryType = .Checkmark
+        if (orderedSchools[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row].name == school.name) {
+            cell.accessoryType = .checkmark
         }
         else {
-            cell.accessoryType = .None
+            cell.accessoryType = .none
         }
         
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
         // reset values when changing school
-        if (orderedSchools[indexPath.section][indexPath.row].name != school.name) {
+        if (orderedSchools[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row].name != school.name) {
             grades = []
             username = ""
             password = ""
             
-            NSUserDefaults.standardUserDefaults().setValue(username, forKey: "username")
+            UserDefaults.standard.setValue(username, forKey: "username")
             try! keychain.set(password, key: "password")
         }
         
-        school = orderedSchools[indexPath.section][indexPath.row]
-        NSUserDefaults.standardUserDefaults().setValue(school.key, forKey: "key")
+        school = orderedSchools[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
+        UserDefaults.standard.setValue(school.key, forKey: "key")
         
         // reset switch settings as well
         settings[Setting.includeDetails.rawValue] = false
         settings[Setting.showDetailSwitch.rawValue] = false
-        NSUserDefaults.standardUserDefaults().setObject(settings, forKey: "settings")
+        UserDefaults.standard.set(settings, forKey: "settings")
         
-        NSUserDefaults.standardUserDefaults().synchronize()
+        UserDefaults.standard.synchronize()
         
-        navigationController?.popViewControllerAnimated(true)
+        navigationController!.popViewController(animated: true)
     }
 }
