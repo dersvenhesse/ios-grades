@@ -42,7 +42,9 @@ class DisclosureController: UIViewController {
             html = html.replacingOccurrences(of: "<%contact%>", with: PrivateConfiguration.disclosureContact)
             html = html.replacingOccurrences(of: "<%imprint%>", with: PrivateConfiguration.disclosureImprint)
             html = html.replacingOccurrences(of: "<%author%>", with: PrivateConfiguration.disclosureAuthor)
-            
+
+            html = html.replacingOccurrences(of: "<%version%>", with: version)
+
             // show
             webview.loadHTMLString(html, baseURL: nil)
         }

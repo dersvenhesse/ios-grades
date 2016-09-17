@@ -291,6 +291,7 @@
 						CreatedOnToolsVersion = 6.3.2;
 						DevelopmentTeam = UP8AJLSB2C;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 0;
@@ -308,7 +309,9 @@
 					};
 					4E16E0F01B39A3620026EC44 = {
 						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = UP8AJLSB2C;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 4E16E0DB1B39A3620026EC44;
 					};
 				};
