@@ -354,22 +354,25 @@ extension GradesController {
             vc.initialSetup = true
         }
         else if (segue.identifier == "showDetail") {
+            let cell = sender as! UITableViewCell
+            let indexPath = table.indexPath(for: cell)!
+            
             let vc = segue.destination as! GradesDetailController
             
-            let indexPath = table.indexPathForSelectedRow
-            vc.grade = grades[(indexPath! as NSIndexPath).section].1[(indexPath! as NSIndexPath).row]
+            vc.grade = grades[indexPath.section].1[indexPath.row]
         }
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if (identifier == "showDetail") {
-            let indexPath = table.indexPathForSelectedRow
+            let cell = sender as! UITableViewCell
+            let indexPath = table.indexPath(for: cell)!
             
-            if (grades[(indexPath! as NSIndexPath).section].1[(indexPath! as NSIndexPath).row].details != nil) {
+            if (grades[indexPath.section].1[indexPath.row].details != nil) {
                 return true
             }
             else {
-                table.deselectRow(at: table.indexPathForSelectedRow!, animated: false)
+                table.deselectRow(at: indexPath, animated: false)
                 return false
             }
         }
