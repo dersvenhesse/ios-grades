@@ -8,6 +8,8 @@ The app is downloadable for free in the [iTunes App Store](https://itunes.apple.
     * [Alamofire](https://github.com/Alamofire/Alamofire)
     * [KeychainAccess](https://github.com/kishikawakatsumi/KeychainAccess)
 
+Build via `carthage update --platform ios --no-use-binaries`.
+
 # Screenshots
 <img src="assets/screen1.png" width="30%" />
 <img src="assets/screen2.png" width="30%" />
