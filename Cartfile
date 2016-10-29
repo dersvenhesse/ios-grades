@@ -1,2 +1,2 @@
-github "Alamofire/Alamofire"
-github "kishikawakatsumi/KeychainAccess"
+github "Alamofire/Alamofire" ~> 4.0
+github "kishikawakatsumi/KeychainAccess" ~> 3.0
