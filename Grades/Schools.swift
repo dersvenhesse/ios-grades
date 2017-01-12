@@ -60,8 +60,8 @@ var schools = [
         key: "tukl",
         name: "Technische Universität Kaiserslautern",
         order: "K",
-        url: "qis.verw.uni-kl.de"
-        urlTrail: "/qisserver/rds?state="
+        url: "qis.verw.uni-kl.de",
+        urlListTrail: "%7Cstudiengang%3Astg%3DA44&expand=0&asi="
     ),
     School(
         key: "hskoblenz",

@@ -28,6 +28,7 @@ class School: CustomStringConvertible {
     var order: Character
     var url: String
     var urlTrail: String
+    var urlListTrail: String
     var loginParameters: (String, String)
     var gradelistClasses: [String]
     
@@ -39,6 +40,7 @@ class School: CustomStringConvertible {
         order: Character,
         url: String,
         urlTrail: String = "/qisserver/rds?state=",
+        urlListTrail: String = "%2Cstgnr%3D1&expand=0&asi=",
         loginParameters: (String, String) = ("asdf", "fdsa"),
         gradelistClasses: [String] = ["qis_records", "tabelle1_alignright", "tabelle1_alignleft"],
         gradelistIndices: [GradelistIndexKey: Int] = [GradelistIndexKey: Int]()
@@ -48,6 +50,7 @@ class School: CustomStringConvertible {
         self.order = order
         self.url = url
         self.urlTrail = urlTrail
+        self.urlListTrail = urlListTrail
         self.loginParameters = loginParameters
         self.gradelistClasses = gradelistClasses
         self.gradelistIndices = gradelistIndices
