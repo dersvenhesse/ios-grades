@@ -234,7 +234,14 @@ class RequestManager {
      * Navigate to grade list (using degree and asi) and finally parse all grades.
      */
     fileprivate func findList(callback: @escaping (_ error: RequestError, _ list: [Grade]) -> Void) {
-        self.alamofireManager.request("https://" + school.url + school.urlTrail + "notenspiegelStudent&next=list.vm&nextdir=qispos/notenspiegel/student&createInfos=Y&struct=auswahlBaum&nodeID=auswahlBaum%7Cabschluss%3Aabschl%3D" + degree + "%2Cstgnr%3D1&expand=0&asi=" + asi).responseString { response in
+        var full_url: String = "https://" + school.url + school.urlTrail + "notenspiegelStudent&next=list.vm&nextdir=qispos/notenspiegel/student&createInfos=Y&struct=auswahlBaum&nodeID=auswahlBaum%7Cabschluss%3Aabschl%3D" + degree
+        
+        if (school.key == "tukl")
+            full_url += "%7Cstudiengang%3Astg%3DA44&expand=0&asi=" + asi
+        else
+            full_url += "%7Cstudiengang%3Astg%3DA44&expand=0&asi=" + asi
+      
+        self.alamofireManager.request(full_url).responseString { response in
             
             var value = response.result.value
             
