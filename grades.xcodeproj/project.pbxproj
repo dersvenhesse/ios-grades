@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		019B9B571E3C248B00D8D857 /* OnePasswordExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019B9B561E3C248B00D8D857 /* OnePasswordExtension.framework */; };
 		4E046E801C4E5A7300672280 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E046E7F1C4E5A7300672280 /* Functions.swift */; };
 		4E046E821C4E8CF500672280 /* DetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E046E811C4E8CF500672280 /* DetailTableViewCell.swift */; };
 		4E0701C91C9F3BBC00B59DF7 /* disclosure.html in Resources */ = {isa = PBXBuildFile; fileRef = 4E0701C81C9F3BBC00B59DF7 /* disclosure.html */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		019B9B561E3C248B00D8D857 /* OnePasswordExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OnePasswordExtension.framework; path = Carthage/Build/iOS/OnePasswordExtension.framework; sourceTree = "<group>"; };
 		4E046E7F1C4E5A7300672280 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		4E046E811C4E8CF500672280 /* DetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailTableViewCell.swift; sourceTree = "<group>"; };
 		4E0701C81C9F3BBC00B59DF7 /* disclosure.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = disclosure.html; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				019B9B571E3C248B00D8D857 /* OnePasswordExtension.framework in Frameworks */,
 				4EA7C6431B6AC3F900FA0925 /* KeychainAccess.framework in Frameworks */,
 				4E3DC5BA1B39A85D0071BC1B /* Alamofire.framework in Frameworks */,
 			);
@@ -104,6 +107,7 @@
 		4DB76895D90642C13A0F055B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				019B9B561E3C248B00D8D857 /* OnePasswordExtension.framework */,
 				4E3DC5B91B39A85D0071BC1B /* Alamofire.framework */,
 				4EA7C6421B6AC3F900FA0925 /* KeychainAccess.framework */,
 			);
@@ -246,7 +250,7 @@
 				4E16E0D81B39A3620026EC44 /* Sources */,
 				4E16E0D91B39A3620026EC44 /* Frameworks */,
 				4E16E0DA1B39A3620026EC44 /* Resources */,
-				4E3DC5BB1B39A8630071BC1B /* ShellScript */,
+				010FFB151E3C2C820023D449 /* ShellScript */,
 				4E8D8D1B1B41D81F00BE78E5 /* ShellScript */,
 			);
 			buildRules = (
@@ -357,7 +361,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4E3DC5BB1B39A8630071BC1B /* ShellScript */ = {
+		010FFB151E3C2C820023D449 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -365,6 +369,7 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/KeychainAccess.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/OnePasswordExtension.framework",
 			);
 			outputPaths = (
 			);

@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import OnePasswordExtension
 
 var username = ""
 var password = ""
@@ -32,6 +33,9 @@ class SettingsController: UITableViewController {
     @IBOutlet weak var usernameInput: UITextField!
     @IBOutlet weak var passwordInput: UITextField!
 
+    
+    @IBOutlet weak var onePasswordButton: UIButton!
+    
     @IBOutlet weak var detailSwitchCell: UITableViewCell!
     @IBOutlet weak var detailSwitch: UISwitch!
 
@@ -49,6 +53,23 @@ class SettingsController: UITableViewController {
     
     @IBAction func passwordChanged(_ sender: AnyObject) {
         setValues(input: passwordInput, key: "password", global: &password)
+    }
+    
+    @IBAction func onePasswordRequest(_ sender: Any) {
+        OnePasswordExtension.shared().findLogin(forURLString: school.url, for: self, sender: sender, completion: { (loginDictionary, error) -> Void in
+            if loginDictionary == nil {
+                if error!._code == Int(AppExtensionErrorCodeCancelledByUser) {
+                    print("Error invoking 1Password App Extension for find login: \(error)")
+                }
+                return
+            }
+            
+            self.usernameInput.text = loginDictionary?[AppExtensionUsernameKey] as? String
+            self.passwordInput.text = loginDictionary?[AppExtensionPasswordKey] as? String
+            
+            self.setValues(input: self.usernameInput, key: "username", global: &username)
+            self.setValues(input: self.passwordInput, key: "password", global: &password)
+        })
     }
     
     @IBAction func detailSwitchChanged(_ sender: AnyObject) {
@@ -82,6 +103,8 @@ class SettingsController: UITableViewController {
         
         usernameInput.delegate = self
         passwordInput.delegate = self
+        onePasswordButton.isHidden = (false == OnePasswordExtension.shared().isAppExtensionAvailable())
+        
         
         let uitgr = UITapGestureRecognizer(target: self, action: #selector(SettingsController.dismissKeyboard))
         uitgr.cancelsTouchesInView = false
