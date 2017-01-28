@@ -49,6 +49,14 @@ var schools = [
         url: "qis.server.uni-frankfurt.de"
     ),
     
+    // J
+    School(
+        key: "jadehs",
+        name: "Jade Hochschule",
+        order: "J",
+        url: "qis.jade-hs.de"
+    ),
+    
     // K
     School(
         key: "hskl",
