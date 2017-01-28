@@ -75,7 +75,8 @@ var schools = [
         key: "hsmainz",
         name: "Hochschule Mainz",
         order: "M",
-        url: "hip.hs-mainz.de"
+        url: "hip.hs-mainz.de",
+        gradelistClasses: ["tabelle1"]
     ),
     School(
         key: "hdm",
