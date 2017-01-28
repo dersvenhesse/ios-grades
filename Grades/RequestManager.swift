@@ -259,8 +259,8 @@ class RequestManager {
                 
                 if (school.gradelistIndices.count == 0) {
                     for match in matches {
-                        var data = Functions.regexSearch(regex: "<th (class=\"tabelleheader\")?(\\s)*align=\"[\\w]*\"(\\s)*(width=\"[\\w%]*\")?(\\s)*scope=\"col\"[\\s]?>((?:(?!</th>)[\\s\\S])*)</th>", text: match)
-                        
+                        var data = Functions.regexSearch(regex: "<th (class=\"(tabelleheader|\\$header)\")?(\\s)*align=\"[\\w]*\"(\\s)*(width=\"[\\w%]*\")?(\\s)*scope=\"col\"[\\s]?>((?:(?!</th>)[\\s\\S])*)</th>", text: match)
+
                         if (data.count == 0) {
                             continue
                         }
@@ -291,7 +291,7 @@ class RequestManager {
                 for match in matches {
                     if (self.checkForClasses(string: match)) {
                         
-                        var data = Functions.regexSearch(regex: "<td (nowrap=\"nowrap\" )?(class=\"[\\w]*\" )?valign=\"(top|center)\"[^>]*>((?:(?!</td>)[\\s\\S])*)</td>", text: match)
+                        var data = Functions.regexSearch(regex: "<td (nowrap=\"nowrap\")?(\\s)*(class=\"[\\w]*\")?(\\s)*(valign=\"(top|center)\"[^>]*)?>((?:(?!</td>)[\\s\\S])*)</td>", text: match)
                         
                         if (data.count == 0) {
                             countContinue += 1
@@ -342,7 +342,7 @@ class RequestManager {
                 }
                 
                 // check for special error possibilities
-                if (countExcluded == matches.count) {
+                if (countClassmatch == matches.count) {
                     return callback(RequestError(type: .listError, code: (700 + countClassmatch)), [])
                 }
                 if (countContinue == matches.count) {
@@ -351,7 +351,7 @@ class RequestManager {
                 if (countExcluded == matches.count) {
                     return callback(RequestError(type: .listError, code: (900 + countExcluded)), [])
                 }
-                
+
                 if (gradelist.count == 0) {
                     return callback(RequestError(type: .listError, code: 619), [])
                 }
