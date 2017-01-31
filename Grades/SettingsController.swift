@@ -33,7 +33,6 @@ class SettingsController: UITableViewController {
     @IBOutlet weak var usernameInput: UITextField!
     @IBOutlet weak var passwordInput: UITextField!
 
-    
     @IBOutlet weak var onePasswordButton: UIButton!
     
     @IBOutlet weak var detailSwitchCell: UITableViewCell!
@@ -57,10 +56,7 @@ class SettingsController: UITableViewController {
     
     @IBAction func onePasswordRequest(_ sender: Any) {
         OnePasswordExtension.shared().findLogin(forURLString: school.url, for: self, sender: sender, completion: { (loginDictionary, error) -> Void in
-            if loginDictionary == nil {
-                if error!._code == Int(AppExtensionErrorCodeCancelledByUser) {
-                    print("Error invoking 1Password App Extension for find login: \(error)")
-                }
+            if (loginDictionary == nil) {
                 return
             }
             
@@ -103,8 +99,10 @@ class SettingsController: UITableViewController {
         
         usernameInput.delegate = self
         passwordInput.delegate = self
-        onePasswordButton.isHidden = (false == OnePasswordExtension.shared().isAppExtensionAvailable())
         
+        if(OnePasswordExtension.shared().isAppExtensionAvailable() == false) {
+            onePasswordButton.removeFromSuperview()
+        }
         
         let uitgr = UITapGestureRecognizer(target: self, action: #selector(SettingsController.dismissKeyboard))
         uitgr.cancelsTouchesInView = false
@@ -137,7 +135,7 @@ class SettingsController: UITableViewController {
     // helper
  
     fileprivate func setValues(input: UITextField, key: String, global: inout String) {
-        
+
         // reset grades
         grades = []
         amount = -1
