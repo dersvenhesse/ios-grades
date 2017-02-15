@@ -11,7 +11,15 @@
  * The key should be unique.
  */
 var schools = [
-    
+
+    // B
+    School(
+        key: "thbingen",
+        name: "Technische Hochschule Bingen",
+        order: "B",
+        url: "qispos.vw.fh-bingen.de"
+    ),
+
     // D
     School(
         key: "hda",

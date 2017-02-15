@@ -168,7 +168,7 @@ extension SettingsController {
         var title = ""
         switch(section) {
         case 0:
-            title = "Universtität oder Hochschule"
+            title = "Hochschule"
             break
         case 1:
             title = "QIS-Zugangsdaten"

@@ -107,9 +107,9 @@
 		4DB76895D90642C13A0F055B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				019B9B561E3C248B00D8D857 /* OnePasswordExtension.framework */,
 				4E3DC5B91B39A85D0071BC1B /* Alamofire.framework */,
 				4EA7C6421B6AC3F900FA0925 /* KeychainAccess.framework */,
+				019B9B561E3C248B00D8D857 /* OnePasswordExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

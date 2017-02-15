@@ -529,8 +529,12 @@ class RequestManager {
      * Save row indices for specific table headers.
      */
     fileprivate func createGradelistIndicesFromData(data: [String]) {
-        if (data.contains("Prüfungstext")) {
-            school.gradelistIndices[.lecture] = data.index(of: "Prüfungstext")!
+
+        let lectures = ["Prüfungstext", "Prüfung"]
+        for l in lectures {
+            if (school.gradelistIndices[.lecture] == nil && data.contains(l)) {
+                school.gradelistIndices[.lecture] = data.index(of: l)!
+            }
         }
         
         if (data.contains("Semester")) {
@@ -544,18 +548,12 @@ class RequestManager {
         if (data.contains("Status")) {
             school.gradelistIndices[.state] = data.index(of: "Status")!
         }
-        
-        if (data.contains("Credit Points")) {
-            school.gradelistIndices[.cp] = data.index(of: "Credit Points")!
-        }
-        else if (data.contains("CP")) {
-            school.gradelistIndices[.cp] = data.index(of: "CP")!
-        }
-        else if (data.contains("ECTS")) {
-            school.gradelistIndices[.cp] = data.index(of: "ECTS")!
-        }
-        else if (data.contains("Bonus")) {
-            school.gradelistIndices[.cp] = data.index(of: "Bonus")!
+
+        let cps = ["Credit Points", "CP", "ECTS", "Leistungspunkte", "Bonus"]
+        for c in cps {
+            if (school.gradelistIndices[.cp] == nil && data.contains(c)) {
+                school.gradelistIndices[.cp] = data.index(of: c)!
+            }
         }
     }
     
