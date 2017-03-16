@@ -17,7 +17,7 @@ var schools = [
         key: "thbingen",
         name: "Technische Hochschule Bingen",
         order: "B",
-        url: "qispos.vw.fh-bingen.de"
+        url: "qispos.th-bingen.de"
     ),
 
     // D

@@ -276,7 +276,7 @@ extension GradesController: UITableViewDataSource, UITableViewDelegate {
         let state = entry.state
         let grade = entry.grade
         
-        var gradeString = grade == 0 ? state : format(grade: grade)
+        var gradeString = (grade == 0 || grade == 5) ? state : format(grade: grade)
         if (gradeString == "bestanden" || gradeString == "BE") {
             gradeString = "✓"
         }
@@ -428,7 +428,7 @@ extension GradesController {
         
         for (termIndex, _) in grades.enumerated() {
             for entry in grades[termIndex].1 {
-                if (excludeZero && entry.grade == 0) {
+                if (excludeZero && entry.grade == 0 || entry.grade == 5) {
                     continue
                 }
                 totalCps += entry.cp
@@ -442,7 +442,7 @@ extension GradesController {
         var cps: Double = 0.0
         
         for entry in grades[termIndex].1 {
-            if (excludeZero && entry.grade == 0) {
+            if (excludeZero && entry.grade == 0 || entry.grade == 5) {
                 continue
             }
             cps += entry.cp
@@ -463,7 +463,7 @@ extension GradesController {
         
         for (termIndex, _) in grades.enumerated() {
             for entry in grades[termIndex].1 {
-                if (entry.grade != 0) {
+                if (entry.grade != 0 && entry.grade != 5) {
                     if (totalCps != 0) {
                         weighted += (entry.cp * entry.grade)
                     }
@@ -489,7 +489,7 @@ extension GradesController {
         var weighted: Double = 0.0
         
         for entry in grades[termIndex].1 {
-            if (entry.grade != 0) {
+            if (entry.grade != 0 && entry.grade != 5) {
                 if (cps != 0) {
                     weighted += (entry.cp * entry.grade)
                 }

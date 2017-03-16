@@ -175,8 +175,8 @@ class RequestManager {
                 return callback(RequestError(type: .asiError, code: 481))
             }
             else {
-                var matches = Functions.regexSearch(regex: ";asi=.*?[\"|&]", text: value!)
-                
+                var matches = Functions.regexSearch(regex: ";asi=.*?[\"|&|#]", text: value!)
+
                 // save first match as asi
                 if (matches.count > 0 && matches[0].characters.count == 26) {
                     self.asi = (matches[0] as NSString).substring(with: NSMakeRange(5, 20))
