@@ -1,7 +1,7 @@
 # Grades
 Grades is a mobile app for iOS devices to fetch grades from universities' QIS websites. 
 
-The app is downloadable for free in the [iTunes App Store](https://itunes.apple.com/de/app/grades/id1012050566).
+The app can either be installed for free via Xcode or downloaded in the [iTunes App Store](https://itunes.apple.com/de/app/grades/id1012050566).
 
 # Requirements
 * [Carthage](https://github.com/Carthage/Carthage)
