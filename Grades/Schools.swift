@@ -114,7 +114,7 @@ var schools = [
         key: "hsrm",
         name: "Hochschule RheinMain",
         order: "R",
-        url: "qis.hs-rm.de",
+        url: "wwwqis-1k.itmz.hs-rm.de",
         gradelistClasses: ["tabelle1_alignright", "tabelle1_alignleft"]
     ),
     
